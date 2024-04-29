@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BootstrapBlazor\src\BootstrapBlazor.Server\BootstrapBlazor.Server.csproj" />
     <ProjectReference Include="..\WzFrame.Identity.SqlSugar\WzFrame.Identity.SqlSugar.csproj" />
     <ProjectReference Include="..\WzFrame.Shared\WzFrame.Shared.csproj" />
   </ItemGroup>

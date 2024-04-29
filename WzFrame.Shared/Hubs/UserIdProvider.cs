@@ -12,7 +12,6 @@ namespace WzFrame.Shared.Hubs
     {
         public virtual string GetUserId(HubConnectionContext connection)
         {
-            Console.WriteLine(connection.User.Identity?.IsAuthenticated);
             return connection.ConnectionId;
         }
     }
