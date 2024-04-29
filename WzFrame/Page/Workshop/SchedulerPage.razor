@@ -1,0 +1,31 @@
+﻿@page "/system/scheduler"
+@using Quartz
+@using Quartz.Impl
+@using WzFrame.Shared.Job
+@inherits TabPageBase
+@attribute [MenuPageOption(202, "任务管理", Icon = "fas fa-computer", ParentId = 200)]
+
+@inject JobService JobService
+
+<Table TItem="JobDetailImpl" Items="Jobs" AutoGenerateColumns="true">
+
+</Table>
+
+@code {
+
+    private List<JobDetailImpl> Jobs = new List<JobDetailImpl>();
+
+    protected override void OnInitialized()
+    {
+        var job = JobBuilder.Create<HelloJob>().WithIdentity("TestJob").Build();
+        Jobs.Add(job as JobDetailImpl);
+    }
+
+
+    public async Task TestJob()
+    {
+        await JobService.Test();
+    }
+
+
+}

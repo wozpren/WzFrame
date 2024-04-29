@@ -1,0 +1,89 @@
+﻿@using WzFrame.Entity.Interfaces
+@typeparam TItem where TItem : class, IEntityBase, ITree<TItem>, new()
+@inherits TabPageBase
+@inject EntityService<TItem> entityService
+@attribute [CascadingTypeParameter(nameof(TItem))]
+
+<Table TItem="TItem" AutoGenerateColumns="true" class="table-demo"
+       IsPagination="true" PageItemsSource="PageItemsSource"
+       IsStriped="true" IsBordered="true" IsMultipleSelect="true"
+       IsTree="@true" TreeNodeConverter="@TreeNodeConverter" OnEditAsync="OnEditAsync"
+       ShowSkeleton="true" ShowToolbar="true" ShowEditButton="false" ShowSearch="true" ShowExtendButtons="true"
+       OnQueryAsync="OnQueryAsync" OnSaveAsync="OnSaveAsync" OnDeleteAsync="OnDeleteAsync"
+       EditTemplate="EditerTemplate" TableColumns="TableColumns!">
+</Table>
+
+@code {
+    [Parameter]
+    public Func<IEnumerable<TItem>, Task<IEnumerable<TableTreeNode<TItem>>>>? TreeNodeConverterEvent { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem>? EditerTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem>? TableColumns { get; set; }
+
+    [Parameter]
+    public Action<List<TableTreeNode<TItem>>>? OnDataChanged { get; set; }
+
+    [Parameter]
+    public Func<TItem, ItemChangedType, ValueTask<bool>>? OnSaved { get; set; }
+
+    [Parameter]
+    public Func<TItem, Task> OnEditAsync { get; set; }
+
+
+    public List<TableTreeNode<TItem>>? TreeData { get; set; }
+
+    protected IEnumerable<int> PageItemsSource => new int[] { 10, 20, 50, 100 };
+
+
+    protected virtual async Task<IEnumerable<TableTreeNode<TItem>>> TreeNodeConverter(IEnumerable<TItem> items)
+    {
+        if (TreeNodeConverterEvent != null)
+        {
+            TreeData = (await TreeNodeConverterEvent.Invoke(items)).ToList();
+        }
+        else
+        {
+            items = items.BuildTree();
+            var tableTreeNodes = items.ToTableTreeNode();
+            if (tableTreeNodes != null)
+            {
+                TreeData = tableTreeNodes.ToList();
+            }
+            else
+            {
+                TreeData = new List<TableTreeNode<TItem>>();
+            }
+        }
+        OnDataChanged?.Invoke(TreeData);
+        return TreeData;
+    }
+
+
+    protected virtual async Task<QueryData<TItem>> OnQueryAsync(QueryPageOptions options)
+    {        
+        return await entityService.QueryAsync(options);
+    }
+
+    protected virtual async Task<bool> OnSaveAsync(TItem t, ItemChangedType changedType)
+    {
+        if (OnSaved != null)
+        {
+            return await OnSaved.Invoke(t, changedType);
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    protected virtual Task<bool> OnDeleteAsync(IEnumerable<TItem> items)
+    {
+        return Task.FromResult(true);
+    }
+
+
+
+}

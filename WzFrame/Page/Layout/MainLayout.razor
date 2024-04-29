@@ -1,0 +1,157 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.SignalR.Client
+@using WzFrame.Entity.System
+@inherits LayoutComponentBase
+@inject BlazorService blazorService
+@inject SignInManager<ApplicationUser> SignInManager
+@inject AuthenticationStateProvider StateProvider
+@inject NavigationManager NavigationManager
+@inject ToastService ToastService
+@inject HubService HubService
+<BootstrapBlazorRoot>
+<CascadingValue Value="MenuOptions">
+    <Layout ShowGotoTop="true" ShowCollapseBar="true" SideWidth="0"
+            IsPage="true" IsFullSide="@false" IsFixedHeader="@true"
+            TabDefaultUrl="/" UseTabSet="@true" IsOnlyRenderActiveTab="@true"
+            Menus="@Menus">
+        <Header >
+            <div class="header-bar">
+                <NavLink href="/Account/Login" style="height:40px;">
+                <Avatar IsCircle="true" IsBorder="true" Size="Size.Small">
+                </Avatar>
+                </NavLink>
+            </div>
+        </Header>
+        <Side></Side>
+        <Main>
+            @Body
+        </Main>
+        <NotFound>
+            <p>404 Not Found</p>
+        </NotFound>
+        <NotAuthorized>
+            <RedirectToLogin />
+        </NotAuthorized>        
+    </Layout>
+</CascadingValue>
+</BootstrapBlazorRoot>
+
+<div id="blazor-error-ui">
+    出现了未处理的错误
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+
+@code {
+    private List<MenuItem>? Menus { get; set; }
+
+    private List<MenuOption>? MenuOptions { get; set; }
+
+    private AuthenticationState? state;
+
+    private HubConnection? clientConnection;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await CheckSecurityStamp();
+
+        await InitHub();
+        SetConnectUser();
+
+        Menus = BuildMenu(await blazorService.GetMenuOptionsTree(state));
+        MenuOptions = blazorService.MenuOptions;
+        StateHasChanged();
+    }
+
+    protected async Task CheckSecurityStamp()
+    {
+        state = await StateProvider.GetAuthenticationStateAsync();
+        var t = await SignInManager.ValidateSecurityStampAsync(state.User);
+
+        if(t == null)
+        {
+            NavigationManager.NavigateTo($"Account/Login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}", forceLoad: true);
+            return;
+        }
+    }
+
+    private async Task InitHub()
+    {
+        clientConnection = new HubConnectionBuilder()
+         .WithUrl(NavigationManager.ToAbsoluteUri("/client"))
+         .Build();
+
+        clientConnection.On<OnlineNotification>("ReceiveNotification", ReceiveNotification);
+        clientConnection.On("Refresh", Refresh);
+
+        await clientConnection.StartAsync();
+    }
+
+    public void SetConnectUser()
+    {
+        if (clientConnection != null && clientConnection.State == HubConnectionState.Connected && state != null)
+            HubService.ConnectUser.TryAdd(clientConnection.ConnectionId!, state.User);
+    }
+
+
+    public void Refresh()
+    {
+        NavigationManager.Refresh();
+    }
+
+    public async Task ReceiveNotification(OnlineNotification notification)
+    {
+        await ToastService.Show(new ToastOption
+            {
+                Title = notification.Title,
+                Content = notification.Content,
+                Category = notification.Category                
+            });
+
+    }
+
+
+    protected List<MenuItem> BuildMenu(List<MenuOption>? menus, MenuItem? parent = null)
+    {
+
+        if (menus == null)
+        {
+            return new List<MenuItem>();
+        }
+
+        menus.Sort((a, b) => a.Order - b.Order);
+
+        var result = new List<MenuItem>();
+        foreach (var menu in menus)
+        {
+            if (menu.Type == MenuType.Button)
+            {
+                continue;
+            }
+            var item = new MenuItem
+            {
+                Id = menu.Id.ToString(),
+                Text = menu.Name,
+                Icon = menu.Icon,
+                Url = menu.Path,
+            };
+            if(menu.Children != null)
+            {
+                item.Items = BuildMenu(menu.Children.ToList(), item);
+            }
+
+            if(parent != null)
+            {
+                item.Parent = parent;
+                item.ParentId = parent.Id;
+            }
+
+
+            result.Add(item);
+        }
+
+        return result;
+    }
+}

@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="bootstrap,blazor,wasm,webassembly,UI,netcore,web,assembly">
+    <base href="/" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <Link rel="stylesheet" Href="_content/BootstrapBlazor.FontAwesome/css/font-awesome.min.css" />
+    <Link rel="stylesheet" Href="_content/BootstrapBlazor/css/bootstrap.blazor.bundle.min.css" />
+    <Link rel="stylesheet" Href="WzFrame.styles.css" />
+    <Link rel="stylesheet" Href="app.css" />
+    <HeadOutlet @rendermode="RenderModeForPage" />
+</head>
+
+<body>
+    <Routes @rendermode="RenderModeForPage" />
+    <Script Src="js/tool.js" ></Script>
+    <Script Src="_content/BootstrapBlazor/js/bootstrap.blazor.bundle.min.js"></Script>
+    <script src="_framework/blazor.web.js"></script>
+</body>
+
+</html>
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    private IComponentRenderMode? RenderModeForPage => HttpContext.Request.Path.StartsWithSegments("/account")
+        ? null
+        : new InteractiveServerRenderMode(false);
+}

@@ -1,0 +1,224 @@
+﻿@page "/system/menu"
+@inherits TabPageBase
+@attribute [MenuPageOption(1, "首页", Icon = "fas fa-house", Path = "/")]
+@attribute [MenuPageOption(100, "系统管理", Icon = "fas fa-computer", Type = MenuType.Directory, Order = 30)]
+@attribute [MenuPageOption(101, "菜单管理", ParentId = 100, Icon = "fas fa-bars-staggered", Permission = "admin")]
+
+@inject DialogService DialogService
+@inject MenuService MenuService
+@inject ToastService ToastService
+
+<TreeTablePageBase TItem="MenuOption" OnDataChanged="GetData" OnSaved="SaveMenu" OnEditAsync="OnOpenEdit">
+    <TableColumns>
+        <TableColumn Align="Alignment.Center" Text="图标" Width="40" @bind-Field="@context.Icon">
+            <Template Context="vs">
+                <i class="@vs.Value"></i>
+            </Template>
+        </TableColumn>
+    </TableColumns>
+    <EditerTemplate>
+        <EditorForm TModel="MenuOption" AutoGenerateAllItem="false" ItemsPerRow="3">
+            <FieldItems Context="model">
+                <EditorItem @bind-Field="@model.ParentId" >
+                    <EditTemplate Context="value">
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <SelectTree @bind-Value="value.ParentId" TValue="long" Items="MenuTreeSelect" />
+                        </div>
+                    </EditTemplate>
+                </EditorItem>
+                <EditorItem @bind-Field="@model.Name" />
+                <EditorItem @bind-Field="@model.Type" />
+                <EditorItem @bind-Field="@model.Order" />
+                <EditorItem @bind-Field="@model.Icon">
+                    <EditTemplate Context="value">
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <BootstrapInput PlaceHolder="设置图标"
+                                            TValue="string" @bind-Value="@value.Icon" Icon="@value.Icon"
+                                            OnFocusAsync="() => ShowIconSelect(value)" />
+                        </div>
+                    </EditTemplate>
+                </EditorItem>
+                <EditorItem @bind-Field="@model.Path" Text="路径 auto/{实体类名}为自动管理页" />
+                <EditorItem @bind-Field="@model.Assembly">
+                    <EditTemplate Context="value">
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <Select DisplayText="绑定实体类（仅自动管理有效）" Value="selectedClassName"
+                                IsVirtualize="true" TValue="string" OnSelectedItemChanged="SetMenuClass" OnQueryAsync="QueryEntityType" />
+                        </div>
+                    </EditTemplate>
+                </EditorItem>
+                <EditorItem @bind-Field="@model.Permission" Text="权限（逗号分隔）">
+                    <EditTemplate Context="value">
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <BootstrapInput TValue="string" @bind-Value="model.Permissions" />
+                        </div>
+                    </EditTemplate>
+                </EditorItem>
+            </FieldItems>
+        </EditorForm>
+    </EditerTemplate>
+</TreeTablePageBase>
+
+
+@code {
+    public TreeTablePageBase<MenuOption>? TreeTable;
+
+    public List<TableTreeNode<MenuOption>>? Menu;
+    public List<TreeViewItem<long>>? MenuTreeSelect;
+
+
+    protected QueryData<SelectedItem>? typeQueryData;
+
+    protected RenderFragment IconBody =>
+        @<div style="height:70vh;overflow-y:auto;">
+            <FAIconList IsCopy="true" CopiedTooltipText="拷贝成功" IconChanged="OnSelectIconAsync" />
+        </div>
+    ;
+
+    private DialogOption? op;
+    private MenuOption selectedMenu;
+    private string? selectedAssembly;
+    private string? selectedClassName;
+
+
+    protected async Task<QueryData<SelectedItem>> QueryEntityType(VirtualizeQueryOption option)
+    {
+        if (typeQueryData == null || typeQueryData.TotalCount == 0)
+        {
+            await Task.Run(() =>
+            {
+                var entityTypes = Shared.App.EffectiveTypes.Where(x => x.IsClass && !x.IsAbstract && x.IsDefined(typeof(SugarTable), true)).ToList();
+                typeQueryData = new QueryData<SelectedItem>();
+                var items = new List<SelectedItem>();
+                foreach (var type in entityTypes)
+                {
+                    var item = new SelectedItem()
+                        {
+                            Text = type.Name,
+                            Value = type.Assembly + "|" + type.FullName
+                        };
+                    items.Add(item);
+                }
+                typeQueryData.TotalCount = items.Count;
+                typeQueryData.Items = items;
+            });
+        }
+        return typeQueryData;
+    }
+
+    protected Task OnOpenEdit(MenuOption menuOption)
+    {
+        selectedAssembly = menuOption.Assembly;
+        selectedClassName = menuOption.ClassName;
+        if(selectedAssembly != null && selectedClassName != null)
+        {
+            
+        }
+
+        return Task.CompletedTask;
+    }
+
+    protected Task SetMenuClass(SelectedItem item)
+    {
+        if (item.Value != null)
+        {
+            var values = item.Value.Split('|');
+            selectedAssembly = values[0];
+            selectedClassName = values[1];
+        }
+        return Task.CompletedTask;
+    }
+
+    protected override void OnInitialized()
+    {
+        MenuTreeSelect = new List<TreeViewItem<long>>();
+        TreeViewItem<long> treeViewItem = new TreeViewItem<long>(0)
+            {
+                Text = "顶级",
+                HasChildren = true,
+                IsExpand = true
+            };
+        MenuTreeSelect.Add(treeViewItem);
+    }
+
+
+    protected async ValueTask<bool> SaveMenu(MenuOption menu, ItemChangedType type)
+    {
+        if (menu.Type == MenuType.Menu && menu.Path == null)
+        {
+            _ = ToastService.Error("菜单路径不能为空");
+            return false;
+        }
+        if(selectedAssembly != null)
+        {
+            menu.Assembly = selectedAssembly;
+            menu.ClassName = selectedClassName;
+        }
+
+
+
+        if (menu.Path != null)
+        {
+            menu.Path = menu.Path.Trim();
+
+            if (menu.Path.StartsWith("/"))
+            {
+                menu.Path = menu.Path.Substring(1);
+            }
+        }
+        if (type == ItemChangedType.Add)
+            await MenuService.AddAsync(menu);
+        else if (type == ItemChangedType.Update)
+            await MenuService.UpdateAsync(menu);
+
+        return true;
+    }
+
+    protected void GetData(List<TableTreeNode<MenuOption>> tree)
+    {
+        Menu = tree;
+        MenuTreeSelect[0].Items = ToTreeViewItem(tree);
+    }
+
+    protected async Task ShowIconSelect(MenuOption menu)
+    {
+        op = new DialogOption()
+            {
+                Title = "图标选择器",
+                ShowFooter = false,
+                BodyTemplate = IconBody
+            };
+        selectedMenu = menu;
+        await DialogService.Show(op);
+    }
+
+    public List<TreeViewItem<long>> ToTreeViewItem(IEnumerable<TableTreeNode<MenuOption>> tableTreeNode)
+    {
+        List<TreeViewItem<long>> treeViewItems = new List<TreeViewItem<long>>();
+        foreach (var item in tableTreeNode)
+        {
+            TreeViewItem<long> treeViewItem = new TreeViewItem<long>(item.Value.Id)
+                {
+                    Text = item.Value.Name,
+                    Icon = item.Value.Icon,
+                    HasChildren = item.HasChildren,
+                    Items = ToTreeViewItem(item.Items),
+                    IsExpand = true
+                };
+            treeViewItems.Add(treeViewItem);
+
+        }
+        return treeViewItems;
+    }
+
+
+    protected async Task OnSelectIconAsync(string icon)
+    {
+        selectedMenu.Icon = icon;
+        if (op != null)
+        {
+            await op.CloseDialogAsync();
+        }
+    }
+
+}

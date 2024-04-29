@@ -1,0 +1,30 @@
+﻿@page "/system/userEnvironment"
+@inherits TabPageBase
+@using Microsoft.AspNetCore.Identity
+@using WzFrame.Shared.Extensions
+@using WzFrame.Shared.Identity
+@attribute [MenuPageOption(104, "用户环境", ParentId = 100, Icon = "fas fa-computer", Permission = "admin")]
+
+@if(state != null){
+    foreach (var item in state.User.Claims)
+    {
+        <div>@item.Type: @item.Value</div>
+    }
+}
+
+<AuthorizeView Roles="Admin1">
+    <Authorized>
+        <p>只有管理员能看到的世界</p>
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    private AuthenticationState? state;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        state = await StateProvider.GetAuthenticationStateAsync();
+    }
+}

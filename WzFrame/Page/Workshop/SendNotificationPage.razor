@@ -1,0 +1,26 @@
+﻿@page "/SendNotification"
+@inherits TabPageBase
+@attribute [MenuPageOption(200, "工作间", Icon = "fas fa-house", Type = MenuType.Directory, Order = 29)]
+@attribute [MenuPageOption(201, "发送通知", Icon = "fas fa-computer", ParentId=200)]
+@inject Shared.Services.NotificationService NotificationService
+
+<Button OnClick="SendNotification" Text="发送通知"/>
+<Button OnClick="ReadNotification" Text="接收通知"/>
+
+
+@code {
+
+    public async Task SendNotification()
+    {
+        var Identity = CurrentUser.User.Identity;
+        await NotificationService.AddNotificationAsync(539132739219525, 539132739219525, "114514");
+
+    }
+    public async Task ReadNotification()
+    {
+        var notifications = await NotificationService.GetUnreadNotificationAsync(539132739219525);
+        var ids = notifications.Select(x => x.Id).ToList();
+        await NotificationService.SetNotificationRead(ids);
+    }
+
+}

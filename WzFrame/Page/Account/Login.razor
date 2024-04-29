@@ -1,0 +1,223 @@
+﻿@page "/Account/Login"
+@page "/Account/Register"
+
+@using Lazy.Captcha.Core
+@using Microsoft.AspNetCore.Identity
+@using WzFrame.Shared.Identity
+@layout UnauthorizedLayout
+@inject ToastService ToastService
+@inject IdentityRedirectManager RedirectManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject ICaptcha captcha
+
+<div class="container full-page">
+    <div class="row">
+        <div class="col-sm-12 col-md-6  col-lg-8">
+            <h3>WzFrame 基于Blazor的后端框架</h3>
+            <p>计划同时支持Blazor Server和Asp.Net Web API</p>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <Card class="shadow-lg border-0 my-5" style="max-width: 430px;margin: 0 auto;">
+                <BodyTemplate>
+                    <div class="login-item login-item-gitee">
+                        @if (IsRegister)
+                        {
+                            <div class="login-header">
+                                <span>注册</span>
+                                @if (websiteConfig.SupportRegister)
+                                {
+                                    <div class="login-register">
+                                        <a href="/Account/Login">返回登录</a>
+                                    </div>
+                                }
+                            </div>
+                            <EditForm Model="@RegisterModel" OnValidSubmit="OnRegister" method="post" FormName="register" Enhance>
+                                <BootstrapInput TValue="string" name="RegisterModel.Email" @bind-Value="RegisterModel.Email" ShowLabel="false" PlaceHolder="请输入邮箱" />
+                                <BootstrapInput TValue="string" name="RegisterModel.UserName" @bind-Value="RegisterModel.UserName" ShowLabel="false" PlaceHolder="请输入用户名" />
+                                <BootstrapPassword name="RegisterModel.Password" @bind-Value="RegisterModel.Password" ShowLabel="false" PlaceHolder="请输入密码" />
+                                <BootstrapPassword name="RegisterModel.ConfirmPassword" @bind-Value="RegisterModel.ConfirmPassword" ShowLabel="false" PlaceHolder="确认密码" />
+                                <div style="display:flex;justify-content: space-between;">
+                                    <ImageViewer style="height: 47px;" Url="@captchaUrl" />
+                                    <InputText style="width:70px;" class="form-control valid" type="text" @bind-Value="RegisterModel.Captcha" aria-required="true" placeHolder="验证码" />
+                                    <InputText type="hidden" @bind-Value="RegisterModel.CaptchaId" />
+                                </div>
+                                <Button ButtonType="ButtonType.Submit" Text="注册" Color="Color.Primary"></Button>
+                            </EditForm>
+                        }
+                        else
+                        {
+                            <div class="login-header">
+                                <span>登录</span>
+                                @if (websiteConfig.SupportRegister)
+                                {
+                                    <div class="login-register">
+                                        没有账号？
+                                        <a href="/Account/Register">点击注册</a>
+                                    </div>
+                                }
+                            </div>
+                            <EditForm Model="@LoginModel" OnValidSubmit="OnLogin" method="post" FormName="login" Enhance>
+                                <DataAnnotationsValidator />
+                                <InputText class="form-control valid" type="text" @bind-Value="LoginModel.UserName" autocomplete="username" aria-required="true" placeHolder="请输入账号" />
+                                <ValidationMessage For="() => LoginModel.UserName" class="text-danger" />
+                                <BootstrapPassword name="LoginModel.Password" @bind-Value="LoginModel.Password" ShowLabel="false" PlaceHolder="请输入密码" />
+                                <ValidationMessage For="() => LoginModel.Password" class="text-danger" />
+                                <div style="display:flex;justify-content: space-between;">
+                                <ImageViewer style="height: 47px;" Url="@captchaUrl" />
+                                    <InputText style="width:70px;" class="form-control valid" type="text" @bind-Value="LoginModel.Captcha" aria-required="true" placeHolder="验证码" />
+                                    <InputText type="hidden" @bind-Value="LoginModel.CaptchaId" />
+                                </div>
+
+                                <div class="login-sms">
+                                    <Checkbox TValue="bool" name="LoginModel.RememberMe" @bind-Value="LoginModel.RememberMe" ShowLabel="false" ShowAfterLabel="true" DisplayText="记住我" />
+                                    @if (websiteConfig.SupportFindPassword)
+                                    {
+                                        <a href="#">已有账号，忘记密码</a>
+                                    }
+                                </div>
+                                <Button ButtonType="ButtonType.Submit"
+                                        Text="登录" Color="Color.Primary"></Button>
+                                <Divider Text="其他登录方式" />
+                                <div class="login-oauth">
+                                    <div class="login-oauth-item">
+                                        <i class="fa-brands fa-github"></i>
+                                    </div>
+                                    <div class="login-oauth-item">
+                                        <i class="fa-brands fa-twitter"></i>
+                                    </div>
+                                    <div class="login-oauth-item">
+                                        <i class="fa-brands fa-apple"></i>
+                                    </div>
+                                    <div class="login-oauth-item">
+                                        <i class="fa-brands fa-facebook"></i>
+                                    </div>
+                                </div>
+                            </EditForm>
+                        }
+
+                    </div>
+                </BodyTemplate>
+            </Card>
+        </div>
+    </div>
+</div>
+@if(ErrorMessage is not null)
+{
+    <div class="position-fixed" style="top: 10px;left:50%;transform: translateX(-50%);">
+        <Alert Color="Color.Danger">@ErrorMessage</Alert>
+    </div>
+}
+
+
+@code {
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
+    [SupplyParameterFromForm(FormName = "login")]
+    protected LoginInput LoginModel { get; set; } = new LoginInput();
+
+    [SupplyParameterFromForm(FormName = "register")]
+    protected RegisterInput RegisterModel { get; set; } = new RegisterInput();
+
+
+    [NotNull]
+    protected WebsiteConfig? websiteConfig { get; set; }
+
+    protected string? captchaUrl { get; set; }
+
+    protected bool IsRegister { get; set; }
+
+    private string? ErrorMessage { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+        if (HttpContext is null)
+        {
+            RedirectManager.Refresh(forceReload: true);
+        }
+        websiteConfig = AppSettings.Get<WebsiteConfig>();
+
+        IsRegister = RedirectManager.Uri.EndsWith("Register", StringComparison.OrdinalIgnoreCase);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (string.IsNullOrWhiteSpace(LoginModel.CaptchaId))
+        {
+            GenerateCaptcha();
+        }
+    }
+
+    private void GenerateCaptcha()
+    {
+        LoginModel.CaptchaId = Guid.NewGuid().ToString();
+        var captchaData = captcha.Generate(LoginModel.CaptchaId);
+        LoginModel.Captcha = captchaData.Code;
+        //var stream = new MemoryStream(captchaData.Bytes);
+        captchaUrl = $"data:image/png;base64,{Convert.ToBase64String(captchaData.Bytes)}";
+    }
+
+    private async Task OnLogin()
+    {
+        if(LoginModel is not null)
+        {
+            if(!captcha.Validate(LoginModel.CaptchaId, LoginModel.Captcha))
+            {
+                GenerateCaptcha();
+                ErrorMessage = "验证码错误";
+                return;
+            }
+
+            var result = await SignInManager.PasswordSignInAsync(LoginModel.UserName, LoginModel.Password, LoginModel.RememberMe, lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                RedirectManager.RedirectTo("/");
+            }
+            else if (result.IsLockedOut)
+            {
+                ErrorMessage = "账号被锁定，请稍后再试";
+            }
+            else
+            {
+                ErrorMessage = "登录失败，请检查账号密码";
+            }
+        }
+
+    }
+
+    private async Task OnRegister()
+    {
+        if (!captcha.Validate(RegisterModel.CaptchaId, RegisterModel.Captcha))
+        {
+            GenerateCaptcha();
+            ErrorMessage = "验证码错误";
+            return;
+        }
+
+        var user = new ApplicationUser
+            {
+                UserName = RegisterModel.UserName,
+                Email = RegisterModel.Email
+            };
+        if (!UserManager.Options.SignIn.RequireConfirmedAccount)
+        {
+            user.EmailConfirmed = true;
+        }
+
+        var result = await UserManager.CreateAsync(user, RegisterModel.Password);
+        if (result.Succeeded)
+        {
+            RedirectManager.RedirectTo("/Account/Login");
+        }
+        else
+        {
+            ErrorMessage = string.Join("\n", result.Errors.Select(error => error.Description));
+        }
+    }
+
+
+}

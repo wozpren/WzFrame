@@ -1,0 +1,44 @@
+﻿@page "/system/websetting"
+@inherits TabPageBase
+@attribute [MenuPageOption(106, "网站设定", ParentId = 100, Icon = "fas fa-gear", Permission = "admin")]
+@inject ToastService ToastService
+
+<GroupBox Title="基本设定">
+    <EditorForm Model="baseConfig" ItemsPerRow="3">
+        <FieldItems>
+            <EditorItem @bind-Field="@context.SiteDescription">
+                <EditTemplate Context="value">
+                    <div class="col-12">
+                        <Textarea DisplayText="网站描述" @bind-Value="value.SiteDescription"/>
+                    </div>
+                </EditTemplate>
+            </EditorItem>
+        </FieldItems>
+        <Buttons>
+            <Button ButtonType="ButtonType.Submit" Icon="fa-solid fa-floppy-disk" Text="保存" OnClick="SaveBaseSetting" />
+            <Button Icon="fa-solid fa-floppy-disk" Color="Color.Secondary" Text="取消" />
+        </Buttons>
+    </EditorForm>
+</GroupBox>
+
+@code {
+    private WebsiteConfig baseConfig;
+
+    protected override void OnInitialized()
+    {
+        baseConfig = AppSettings.Get<WebsiteConfig>();
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    public async Task SaveBaseSetting()
+    {
+        await AppSettings.SaveConfigAsync<WebsiteConfig>();
+        await ToastService.Success("保存成功");
+    }
+
+}

@@ -1,0 +1,75 @@
+﻿@using WzFrame.Entity.Interfaces
+@typeparam T where T : class, IEntityBase, new()
+@inherits TabPageBase
+@inject EntityService<T> entityService
+
+<Table TItem="T" AutoGenerateColumns="true" class="table-demo"
+       IsPagination="true" PageItemsSource="PageItemsSource"
+       IsStriped="true" IsBordered="true" IsMultipleSelect="true"
+       ShowSkeleton="true" ShowToolbar="true" ShowEditButton="false" ShowSearch="true" ShowExtendButtons="true"
+       OnQueryAsync="OnQueryAsync" OnSaveAsync="OnSaveAsync" OnDeleteAsync="OnDeleteAsync"
+       EditTemplate="EditerTemplate!" TableColumns="TableColumnsTemplate!" RowButtonTemplate="RowButtonTemplate!">
+</Table>
+
+
+@code{
+    [Parameter]
+    public RenderFragment<T>? EditerTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<T>? TableColumnsTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<T>? RowButtonTemplate { get; set; }
+
+
+
+    [Parameter]
+    public Func<QueryPageOptions, Task<QueryData<T>>>? QueryAsync { get; set; }
+
+    [Parameter]
+    public Func<T, ItemChangedType, Task<bool>>? SaveAsync { get; set; }
+
+    [Parameter]
+    public Func<IEnumerable<T>, Task<bool>>? DeleteAsync { get; set; }
+
+    protected IEnumerable<int> PageItemsSource => new int[] { 10, 20, 50, 100 };
+
+    private bool IsShow = false;
+
+
+
+    protected async Task<QueryData<T>> OnQueryAsync(QueryPageOptions options)
+    {
+        if (QueryAsync != null)
+            return await QueryAsync(options);
+        else
+            return await entityService.QueryAsync(options);
+    }
+
+    protected async Task<bool> OnSaveAsync(T t, ItemChangedType changedType)
+    {
+        if (SaveAsync != null)
+        {
+            return await SaveAsync(t, changedType);
+        }
+        else
+        {
+            if (changedType == ItemChangedType.Update)
+                return await entityService.UpdateAsync(t);
+        }
+
+        return true;
+    }
+
+    protected async Task<bool> OnDeleteAsync(IEnumerable<T> items)
+    {
+        if (DeleteAsync != null)
+            return await DeleteAsync(items);
+        else
+            return await entityService.DeletesAsync(items);
+    }
+
+
+
+}

@@ -1,0 +1,8 @@
+{
+  "IsOpen": true,
+  "SupportRegister": true,
+  "SupportFindPassword": false,
+  "SiteName": "WzFrame",
+  "SiteDescription": "个人开发Blazor框架",
+  "DefaultPassword": "123456"
+}

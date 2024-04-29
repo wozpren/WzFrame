@@ -1,0 +1,23 @@
+{
+  "InitMenu": true,
+  "ConnectionConfigs": [
+    {
+      "Enable": true,
+      "InitDb": true,
+      "InitTable": true,
+      "ConfigId": "wzsystem",
+      "DbType": "MySql",
+      "ConnectionString": "server=localhost;user=root;database=wz_systeam;password=Admin@123",
+      "IsAutoCloseConnection": true
+    },
+    {
+      "Enable": false,
+      "InitDb": true,
+      "InitTable": true,
+      "ConfigId": "main",
+      "DbType": "MySql",
+      "ConnectionString": "server=localhost;user=root;database=wz_main;password=Admin@123",
+      "IsAutoCloseConnection": true
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+﻿@page "/system/role"
+@using WzFrame.Shared.Repository
+@attribute [MenuPageOption(103, "角色管理", ParentId = 100, Icon = "fas fa-address-book", Permission = "admin")]
+@inject EntityRepository<Role> entityRepository;
+
+<TablePageBase T="Role" DeleteAsync="OnDeleteAsync">
+
+</TablePageBase>
+
+
+@code {
+
+    protected async Task<bool> OnDeleteAsync(IEnumerable<Role> items)
+    {
+        return await entityRepository.Context
+        .DeleteNav<Role>(items.ToList())
+        .Include(x => x.Users, new DeleteNavOptions()
+            {
+                ManyToManyIsDeleteA = true
+            })
+        .ExecuteCommandAsync();
+    }
+
+}
