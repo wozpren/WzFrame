@@ -1,0 +1,16 @@
+﻿h6, p{
+    margin:0;
+}
+
+.person-line{
+    max-width: 980px;
+}
+
+.person-avatar ::deep .avatar{
+    cursor: pointer;
+}
+
+.outer ::deep .tabs-nav {
+    border-bottom: 1px solid #0000001f;
+    justify-content: center;
+}

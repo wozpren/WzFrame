@@ -2,6 +2,7 @@
 @page "/Account/Register"
 
 @using Lazy.Captcha.Core
+@using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using WzFrame.Shared.Identity
 @layout UnauthorizedLayout
@@ -145,11 +146,14 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+
         if (string.IsNullOrWhiteSpace(LoginModel.CaptchaId))
         {
             GenerateCaptcha();
         }
     }
+
 
     private void GenerateCaptcha()
     {

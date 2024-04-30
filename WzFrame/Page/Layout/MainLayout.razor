@@ -1,39 +1,55 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.SignalR.Client
 @using WzFrame.Entity.System
+@using WzFrame.Entity.DTO
 @inherits LayoutComponentBase
 @inject BlazorService blazorService
-@inject SignInManager<ApplicationUser> SignInManager
+@inject UserService UserService
 @inject AuthenticationStateProvider StateProvider
 @inject NavigationManager NavigationManager
 @inject ToastService ToastService
 @inject HubService HubService
 <BootstrapBlazorRoot>
 <CascadingValue Value="MenuOptions">
-    <Layout ShowGotoTop="true" ShowCollapseBar="true" SideWidth="0"
-            IsPage="true" IsFullSide="@false" IsFixedHeader="@true"
-            TabDefaultUrl="/" UseTabSet="@true" IsOnlyRenderActiveTab="@true"
-            Menus="@Menus">
-        <Header >
-            <div class="header-bar">
-                <NavLink href="/Account/Login" style="height:40px;">
-                <Avatar IsCircle="true" IsBorder="true" Size="Size.Small">
-                </Avatar>
-                </NavLink>
+        <CascadingValue Value="User">
+            <div class="main-layout">
+                <Layout ShowGotoTop="true" ShowCollapseBar="true" SideWidth="0"
+                        IsPage="true" IsFullSide="@false" IsFixedHeader="@true"
+                        TabDefaultUrl="/" UseTabSet="@true" IsOnlyRenderActiveTab="@true"
+                        Menus="@Menus">
+                    <Header>
+                        <div class="header-bar">
+                            <SlideButton style="height:auto;" Placement="Placement.BottomEnd" ShowHeader="false">
+                                <ButtonTemplate>
+                                    <Avatar IsCircle="true" IsBorder="true" Size="Size.Small" />
+                                </ButtonTemplate>
+                                <BodyTemplate>
+                                    <div class="user-menu menu">
+                                        <p class="p-2 fw-bold" style="margin-left: 6px;">@User?.UserName</p>
+                                        <div class="submenu">
+                                            <WMenuLink Url="/person" Text="个人中心" />
+                                            <WMenuLink Url="/Account/Loginout" Text="退出登录" />
+                                        </div>
+                                    </div>
+                                </BodyTemplate>
+                            </SlideButton>
+                        </div>
+                    </Header>
+                    <Side></Side>
+                    <Main>
+                        @Body
+                    </Main>
+                    <NotFound>
+                        <p>404 Not Found</p>
+                    </NotFound>
+                    <NotAuthorized>
+                        <RedirectToLogin />
+                    </NotAuthorized>
+                </Layout>
             </div>
-        </Header>
-        <Side></Side>
-        <Main>
-            @Body
-        </Main>
-        <NotFound>
-            <p>404 Not Found</p>
-        </NotFound>
-        <NotAuthorized>
-            <RedirectToLogin />
-        </NotAuthorized>        
-    </Layout>
-</CascadingValue>
+
+        </CascadingValue>
+    </CascadingValue>
 </BootstrapBlazorRoot>
 
 <div id="blazor-error-ui">
@@ -48,6 +64,7 @@
     private List<MenuOption>? MenuOptions { get; set; }
 
     private AuthenticationState? state;
+    private UserMessage? User;
 
     private HubConnection? clientConnection;
 
@@ -68,12 +85,16 @@
     protected async Task CheckSecurityStamp()
     {
         state = await StateProvider.GetAuthenticationStateAsync();
-        var t = await SignInManager.ValidateSecurityStampAsync(state.User);
+        var applicationUser = await UserService.ValidateSecurityStampAsync(state.User);
 
-        if(t == null)
+
+        if (applicationUser == null)
         {
             NavigationManager.NavigateTo($"Account/Login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}", forceLoad: true);
-            return;
+        }
+        else
+        {
+            User = applicationUser.Adapt<UserMessage>();
         }
     }
 
@@ -93,6 +114,11 @@
     {
         if (clientConnection != null && clientConnection.State == HubConnectionState.Connected && state != null)
             HubService.ConnectUser.TryAdd(clientConnection.ConnectionId!, state.User);
+    }
+
+    public void OnLogout()
+    {
+        NavigationManager.NavigateTo("Account/Login");
     }
 
 

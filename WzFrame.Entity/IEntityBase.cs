@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using WzFrame.Entity.Attributes;
 using WzFrame.Entity.Consts;
 using WzFrame.Entity.Users;
-using WzFrame.Entity.Users.DTO;
+using WzFrame.Entity.DTO;
 
 namespace WzFrame.Entity
 {

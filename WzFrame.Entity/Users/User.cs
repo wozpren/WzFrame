@@ -41,8 +41,6 @@ namespace WzFrame.Entity.Users
         [AutoGenerateColumn(Ignore = true)]
         public override string? NormalizedUserName { get => base.UserName; set => base.UserName = value; }
 
-
-
         [AutoGenerateColumn(Text = "邮箱")]
         public override string? Email { get => base.Email; set => base.Email = value; }
 

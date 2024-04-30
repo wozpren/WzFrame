@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authentication
+@using WzFrame.Shared.Identity
+
+@page "/Account/Loginout"
+@layout UnauthorizedLayout
+@inject IdentityRedirectManager RedirectManager
+
+退出
+
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    protected override void OnParametersSet()
+    {
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (HttpContext is null)
+        {
+            RedirectManager.Refresh(forceReload: true);
+        }
+        else
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            RedirectManager.RedirectTo("/Account/Login", new() { ["returnUrl"] = "/" });
+        }
+    }
+}

@@ -1,0 +1,19 @@
+﻿@using WzFrame.Entity.DTO
+@if (Roles != null)
+{
+    @foreach (var Role in Roles)
+    {
+        <span class="tag">@Role.DisplayName</span>
+    }
+}
+else
+{
+    <span>游客</span>
+}
+
+@code {
+    [Parameter]
+    public List<RoleMessage>? Roles{ get; set; }
+
+
+}

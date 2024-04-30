@@ -33,6 +33,7 @@
 
 .layout-side {
     border-right: 1px solid var(--bs-border-color);
+    --bb-layout-sidebar-background: #fff;
 }
 
 .layout-footer {
@@ -146,4 +147,29 @@
 
 .toast .toast-body {
     white-space: pre-wrap;
+}
+
+
+.text-sub {
+    color: var(--bs-gray);
+    font-size: 0.8rem;
+    margin-bottom: .2rem !important;
+}
+
+.icon-btn {
+    padding: 13.5px;
+    border: none;
+}
+    .icon-btn .fas {
+        font-size: 1.2rem;
+    }
+
+.flex-last{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.mx-auto{
+    margin:0 auto;
 }

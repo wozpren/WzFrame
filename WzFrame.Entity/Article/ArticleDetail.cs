@@ -1,6 +1,4 @@
-﻿using WzFrame.Entity.Users.DTO;
-
-namespace WzFrame.Entity.Article
+﻿namespace WzFrame.Entity.Article
 {
     public enum ArticleStatus
     {

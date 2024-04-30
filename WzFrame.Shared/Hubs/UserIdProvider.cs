@@ -12,6 +12,10 @@ namespace WzFrame.Shared.Hubs
     {
         public virtual string GetUserId(HubConnectionContext connection)
         {
+            if(connection.User?.Identity?.IsAuthenticated == true)
+            {
+                return connection.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
             return connection.ConnectionId;
         }
     }

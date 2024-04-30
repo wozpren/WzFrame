@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
+using WzFrame.Entity.DTO;
 using WzFrame.Entity.System;
 namespace WzFrame.Components
 {
 
-    public class TabPageBase : WzComponentBase
+    public class TabPageBase : WComponentBase
     {
         [CascadingParameter]
         [NotNull]
@@ -18,7 +19,10 @@ namespace WzFrame.Components
         public TabItem TabItem { get; set; }
 
         [CascadingParameter]
-        private List<MenuOption>? MenuOptions { get; set; }
+        protected List<MenuOption>? MenuOptions { get; set; }
+
+        [CascadingParameter]
+        protected UserMessage? User { get; set; }
 
         protected MenuOption? MenuOption { get; set; }
 
@@ -29,7 +33,8 @@ namespace WzFrame.Components
             if (MenuOptions != null)
             {
                 MenuOption = MenuOptions.FirstOrDefault(x => x.Path == "/" + TabItem.Url);
-                TabItem.SetHeader(MenuOption?.Name, MenuOption.Icon);
+                if (MenuOption != null)
+                    TabItem.SetHeader(MenuOption.Name, MenuOption.Icon);
             }
         }
 

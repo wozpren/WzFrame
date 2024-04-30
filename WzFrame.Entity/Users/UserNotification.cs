@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WzFrame.Entity.Users.DTO;
+using WzFrame.Entity.DTO;
 
 namespace WzFrame.Entity.Users
 {

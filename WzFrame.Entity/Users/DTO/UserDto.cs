@@ -1,6 +1,7 @@
 ﻿using WzFrame.Entity.Attributes;
+using WzFrame.Entity.Users;
 
-namespace WzFrame.Entity.Users.DTO
+namespace WzFrame.Entity.DTO
 {
     [DoNotCreateTable]
     [SugarTable("user")]
@@ -10,10 +11,14 @@ namespace WzFrame.Entity.Users.DTO
 
         public string UserName { get; set; } = string.Empty;
 
+        public string Email { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+
         public string Avatar { get; set; } = string.Empty;
 
         public string Description { get; set; } = string.Empty;
 
+        public List<RoleMessage>? Roles { get; set; }
 
     }
 }

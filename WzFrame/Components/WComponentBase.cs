@@ -4,7 +4,7 @@ using WzFrame.Services;
 
 namespace WzFrame.Components
 {
-    public abstract class WzComponentBase : ComponentBase
+    public abstract class WComponentBase : ComponentBase
     {
         [Inject]
         protected AuthenticationStateProvider? StateProvider { get; set; }

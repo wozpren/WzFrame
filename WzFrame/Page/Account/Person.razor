@@ -1,0 +1,56 @@
+﻿@page "/person"
+
+@inherits TabPageBase
+@inject UserService UserService;
+@attribute [TabItemOption(Text = "个人中心", Icon = "fas fa-user")]
+
+<div class="outer" style="margin: -1rem;">
+    @if (User != null)
+    {
+        <div class="p-5 mx-auto person-line">
+            <div class="d-flex position-relative">
+                <Avatar Url="@User.Avatar" OnClick="UploadAvatar" style="width:100px;height:100px;" IsCircle="true" IsBorder="true" />
+                <div class="ms-5">
+                    <div class="d-flex align-items-center mb-2">
+                        <h6 class="fw-bold me-2">@User.UserName</h6>
+                        <RoleTag Roles="@User.Roles" />
+                    </div>
+                    <p class="text-sub">邮箱：@User.Email</p>
+                    <p class="text-sub">电话：@User.PhoneNumber</p>
+                    <p class="text-sub">简介：@User.Description</p>
+                </div>
+                <div class="flex-last">
+                    <Button class="icon-btn" OnClick="@OpenSetting" Color="Color.Primary" ButtonStyle="ButtonStyle.Circle" IsOutline Icon="fas fa-gear" />
+                </div>
+            </div>
+        </div>
+        <Tab>
+            <TabItem Text="个人资料">
+                <div>我是用户管理</div>
+            </TabItem>
+            <TabItem Text="通知">
+                <div>通知</div>
+            </TabItem>
+        </Tab>
+    }
+    else
+    {
+        <p>尚未登陆</p>
+    }
+</div>
+
+
+
+@code {
+
+    public Task UploadAvatar()
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task OpenSetting()
+    {
+        return Task.CompletedTask;
+    }
+
+}

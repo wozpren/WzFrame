@@ -111,9 +111,9 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<WzFrame.Page.App>()
     .AddInteractiveServerRenderMode();
+
 app.MapHub<ChatHub>("/chathub");
 app.MapHub<BlazorHub>("/client");
-
 
 app.MapAdditionalIdentityEndpoints();
 app.Run();

@@ -31,8 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entity\" />
-    <Folder Include="Extension\" />
     <Folder Include="Page\Article\" />
   </ItemGroup>
 
