@@ -88,7 +88,11 @@ builder.Services.AddBootstrapBlazor(null, opt =>
 {
     opt.IgnoreLocalizerMissing = true;
 });
-
+builder.Services.AddControllers();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "WzFrame", Version = "v1" });
+});
 
 var app = builder.Build();
 app.ConfigureApp();
@@ -103,6 +107,16 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{
+    app.UseSwagger();
+
+    // 启用中间件服务对swagger-ui，指定Swagger JSON终结点
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    });
+}
 
 app.UseHttpsRedirection();
 
@@ -112,8 +126,8 @@ app.UseAntiforgery();
 app.MapRazorComponents<WzFrame.Page.App>()
     .AddInteractiveServerRenderMode();
 
-app.MapHub<ChatHub>("/chathub");
 app.MapHub<BlazorHub>("/client");
 
 app.MapAdditionalIdentityEndpoints();
+app.MapControllers();
 app.Run();

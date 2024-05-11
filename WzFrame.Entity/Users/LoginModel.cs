@@ -49,4 +49,39 @@ namespace WzFrame.Entity.Users
         [Required]
         public string CaptchaId { get; set; } = string.Empty;
     }
+
+    public class RegisterInputApi
+    {
+        [Required]
+        public string UserName { get; set; } = string.Empty;
+
+        [Required]
+        [Display(Name = "Password")]
+        public string Password { get; set; } = string.Empty;
+
+        [Required]
+        public string Captcha { get; set; } = string.Empty;
+
+        [Required]
+        public string CaptchaId { get; set; } = string.Empty;
+    }
+
+    public class LoginInputApi
+    {
+        [Required]
+        public string UserName { get; set; } = string.Empty;
+
+        [Required]
+        [Display(Name = "Password")]
+        public string Password { get; set; } = string.Empty;
+
+        [Required]
+        public string Captcha { get; set; } = string.Empty;
+
+        [Required]
+        public string CaptchaId { get; set; } = string.Empty;
+
+        [Required]
+        public bool RememberMe { get; set; }
+    }
 }

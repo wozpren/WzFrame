@@ -34,7 +34,7 @@
                                 }
                             </div>
                             <EditForm Model="@RegisterModel" OnValidSubmit="OnRegister" method="post" FormName="register" Enhance>
-                                <BootstrapInput TValue="string" name="RegisterModel.Email" @bind-Value="RegisterModel.Email" ShowLabel="false" PlaceHolder="请输入邮箱" />
+                                <BootstrapInput TValue="string" type="email" name="RegisterModel.Email" @bind-Value="RegisterModel.Email" ShowLabel="false" PlaceHolder="请输入邮箱" />
                                 <BootstrapInput TValue="string" name="RegisterModel.UserName" @bind-Value="RegisterModel.UserName" ShowLabel="false" PlaceHolder="请输入用户名" />
                                 <BootstrapPassword name="RegisterModel.Password" @bind-Value="RegisterModel.Password" ShowLabel="false" PlaceHolder="请输入密码" />
                                 <BootstrapPassword name="RegisterModel.ConfirmPassword" @bind-Value="RegisterModel.ConfirmPassword" ShowLabel="false" PlaceHolder="确认密码" />
@@ -157,9 +157,9 @@
 
     private void GenerateCaptcha()
     {
-        LoginModel.CaptchaId = Guid.NewGuid().ToString();
+        RegisterModel.CaptchaId = LoginModel.CaptchaId = Guid.NewGuid().ToString();
         var captchaData = captcha.Generate(LoginModel.CaptchaId);
-        LoginModel.Captcha = captchaData.Code;
+        RegisterModel.Captcha = LoginModel.Captcha = captchaData.Code;
         //var stream = new MemoryStream(captchaData.Bytes);
         captchaUrl = $"data:image/png;base64,{Convert.ToBase64String(captchaData.Bytes)}";
     }

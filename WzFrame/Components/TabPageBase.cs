@@ -22,7 +22,7 @@ namespace WzFrame.Components
         protected List<MenuOption>? MenuOptions { get; set; }
 
         [CascadingParameter]
-        protected UserMessage? User { get; set; }
+        protected UserDTO? User { get; set; }
 
         protected MenuOption? MenuOption { get; set; }
 

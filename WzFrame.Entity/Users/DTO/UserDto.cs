@@ -5,7 +5,7 @@ namespace WzFrame.Entity.DTO
 {
     [DoNotCreateTable]
     [SugarTable("user")]
-    public class UserMessage
+    public class UserDTO
     {
         public long Id { get; set; }
 

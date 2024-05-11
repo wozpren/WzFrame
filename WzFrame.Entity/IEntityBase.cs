@@ -45,7 +45,7 @@ namespace WzFrame.Entity
 
 
         [Navigate(NavigateType.OneToOne, nameof(Id))]
-        public virtual UserMessage? CreateUser { get; set; }
+        public virtual UserDTO? CreateUser { get; set; }
     }
 
 
@@ -59,7 +59,7 @@ namespace WzFrame.Entity
         public virtual long? CreateUserId { get; set; }
 
         [Navigate(NavigateType.OneToOne, nameof(CreateUserId))]
-        public virtual UserMessage? CreateUser { get; set; }
+        public virtual UserDTO? CreateUser { get; set; }
 
 
         public virtual DateTime? UpdateTime { get; set; }

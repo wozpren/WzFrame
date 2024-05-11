@@ -64,7 +64,7 @@
     private List<MenuOption>? MenuOptions { get; set; }
 
     private AuthenticationState? state;
-    private UserMessage? User;
+    private UserDTO? User;
 
     private HubConnection? clientConnection;
 
@@ -94,7 +94,7 @@
         }
         else
         {
-            User = applicationUser.Adapt<UserMessage>();
+            User = applicationUser.Adapt<UserDTO>();
         }
     }
 

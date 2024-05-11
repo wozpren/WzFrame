@@ -27,7 +27,7 @@ namespace WzFrame.Entity.Users
 
     [SysTable]
     [SugarTable("User", TableDescription = "用户表")]
-    public class ApplicationUser : IdentityUser<long>, IEntityBase
+    public partial class ApplicationUser : IdentityUser<long>, IEntityBase
     {
         [AutoGenerateColumn(Ignore = true)]
         [SugarColumn(IsPrimaryKey = true)]
@@ -39,7 +39,7 @@ namespace WzFrame.Entity.Users
 
         [SugarColumn(ColumnDescription = "格式化用户名", Length = 60)]
         [AutoGenerateColumn(Ignore = true)]
-        public override string? NormalizedUserName { get => base.UserName; set => base.UserName = value; }
+        public override string? NormalizedUserName { get => base.NormalizedUserName; set => base.NormalizedUserName = value; }
 
         [AutoGenerateColumn(Text = "邮箱")]
         public override string? Email { get => base.Email; set => base.Email = value; }
@@ -94,6 +94,7 @@ namespace WzFrame.Entity.Users
 
         [AutoGenerateColumn(Text = "描述", Visible = false, IsVisibleWhenEdit = true)]
         public string? Description { get; set; }
+
 
 
     }
