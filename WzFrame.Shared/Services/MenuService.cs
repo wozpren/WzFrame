@@ -28,48 +28,25 @@ namespace WzFrame.Shared.Services
         }
 
 
-        public async ValueTask<List<MenuOption>> GetTree()
+        public Task<List<MenuOption>> GetTree()
         {
-            if(cache.TryGetValue("menu", out List<MenuOption>? menuOptionsTree))
-            {
-                return menuOptionsTree!;
-            }
-
-            var tree = await entityRepository.AsQueryable().ToTreeAsync(it => it.Children, it=> it.ParentId, 0);
-            var list = new List<MenuOption>();
-            GetMenu(list, tree);
-
-            cache.Set("menu", tree, TimeSpan.FromDays(1));
-            return tree;
-        }
-
-        private IEnumerable<MenuOption> GetMenu(List<MenuOption> list, IEnumerable<MenuOption> tree)
-        {
-            list.AddRange(tree);
-            foreach (var item in tree)
-            {
-                if (item.Children != null)
-                {
-                    GetMenu(list, item.Children);
-                }
-            }
-            return tree;
+            return entityRepository.AsQueryable()
+                .ToTreeAsync(it => it.Children, it => it.ParentId, 0);
         }
 
 
         public async Task<List<MenuOption>> GetTree(AuthenticationState? state)
         {
-            List<MenuOption>? tree = await GetTree().DeepClone();
-            var newMenu = new List<MenuOption>();
+            var meun = await GetTree();
             if (state != null)
             {
                 var roles = state.User.Claims
                     .Where(x => x.Type == ClaimTypes.Role)
                     .Select(i=> i.Value.ToLower())
                     .ToList();
-                FilterMenu(tree, roles);
+                FilterMenu(meun, roles);
             }
-            return tree;
+            return meun;
         }
 
         private void FilterMenu(List<MenuOption> tree, IEnumerable<string> roles)
@@ -91,10 +68,6 @@ namespace WzFrame.Shared.Services
                 }
             }
         }
-
-
-
-
 
 
     }

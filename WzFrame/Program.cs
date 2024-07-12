@@ -34,6 +34,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.Configure<IdentityOptions>(config =>
 {
+    config.SignIn.RequireConfirmedEmail = false;
+    config.SignIn.RequireConfirmedPhoneNumber = false;
     config.Password = new PasswordOptions
     {
         RequireNonAlphanumeric = false,
@@ -61,6 +63,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddSqlSugarStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
+
 builder.Services.AddSingleton<IUserIdProvider, UserIdProvider>();
 builder.Services.AutoRegisterServices();
 
@@ -92,6 +95,11 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "WzFrame", Version = "v1" });
+});
+
+builder.Services.AddHttpClient("eshop", p =>
+{
+    p.BaseAddress = new Uri("http://wwww.553vip.com");
 });
 
 var app = builder.Build();

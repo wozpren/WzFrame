@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WzFrame.Entity.Users;
 using WzFrame.Shared.ApiResult;
 
-namespace WzFrame.Controllers
+namespace WzFrame.Shared.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

@@ -60,7 +60,6 @@
 
 @code {
     private List<MenuItem>? Menus { get; set; }
-
     private List<MenuOption>? MenuOptions { get; set; }
 
     private AuthenticationState? state;
@@ -71,18 +70,17 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-        await CheckSecurityStamp();
-
-        await InitHub();
-        SetConnectUser();
-
-        Menus = BuildMenu(await blazorService.GetMenuOptionsTree(state));
-        MenuOptions = blazorService.MenuOptions;
-        StateHasChanged();
+        if(await CheckSecurityStamp())
+        {
+            await InitHub();
+            SetConnectUser();
+            Menus = await blazorService.GetMenuItems(state);
+            MenuOptions = await blazorService.GetMenuOptions(state);
+            StateHasChanged();
+        }
     }
 
-    protected async Task CheckSecurityStamp()
+    protected async Task<bool> CheckSecurityStamp()
     {
         state = await StateProvider.GetAuthenticationStateAsync();
         var applicationUser = await UserService.ValidateSecurityStampAsync(state.User);
@@ -91,10 +89,12 @@
         if (applicationUser == null)
         {
             NavigationManager.NavigateTo($"Account/Login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}", forceLoad: true);
+            return false;
         }
         else
         {
             User = applicationUser.Adapt<UserDTO>();
+            return true;
         }
     }
 
@@ -139,45 +139,5 @@
     }
 
 
-    protected List<MenuItem> BuildMenu(List<MenuOption>? menus, MenuItem? parent = null)
-    {
 
-        if (menus == null)
-        {
-            return new List<MenuItem>();
-        }
-
-        menus.Sort((a, b) => a.Order - b.Order);
-
-        var result = new List<MenuItem>();
-        foreach (var menu in menus)
-        {
-            if (menu.Type == MenuType.Button)
-            {
-                continue;
-            }
-            var item = new MenuItem
-            {
-                Id = menu.Id.ToString(),
-                Text = menu.Name,
-                Icon = menu.Icon,
-                Url = menu.Path,
-            };
-            if(menu.Children != null)
-            {
-                item.Items = BuildMenu(menu.Children.ToList(), item);
-            }
-
-            if(parent != null)
-            {
-                item.Parent = parent;
-                item.ParentId = parent.Id;
-            }
-
-
-            result.Add(item);
-        }
-
-        return result;
-    }
 }

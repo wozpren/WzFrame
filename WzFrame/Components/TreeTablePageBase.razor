@@ -4,7 +4,7 @@
 @inject EntityService<TItem> entityService
 @attribute [CascadingTypeParameter(nameof(TItem))]
 
-<Table TItem="TItem" AutoGenerateColumns="true" class="table-demo"
+<Table TItem="TItem" AutoGenerateColumns="true" class="table-demo" PageItems="PageItems"
        IsPagination="true" PageItemsSource="PageItemsSource"
        IsStriped="true" IsBordered="true" IsMultipleSelect="true"
        IsTree="@true" TreeNodeConverter="@TreeNodeConverter" OnEditAsync="OnEditAsync"
@@ -32,6 +32,8 @@
     [Parameter]
     public Func<TItem, Task> OnEditAsync { get; set; }
 
+    [Parameter]
+    public int PageItems { get; set; } = 10;
 
     public List<TableTreeNode<TItem>>? TreeData { get; set; }
 
@@ -81,7 +83,7 @@
 
     protected virtual Task<bool> OnDeleteAsync(IEnumerable<TItem> items)
     {
-        return Task.FromResult(true);
+        return entityService.DeletesAsync(items);
     }
 
 

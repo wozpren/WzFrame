@@ -30,7 +30,7 @@ namespace WzFrame.Shared.Services
         {
             RefAsync<int> totalcount = 0;
 
-            var data = await entityRepository.AsQueryable().ToPageListAsync(1, 10, totalcount);
+            var data = await entityRepository.AsQueryable().ToPageListAsync(queryPageOptions.PageIndex, queryPageOptions.PageItems, totalcount);
             var result = new QueryData<TEntity>()
             {
                 Items = data,
@@ -41,6 +41,9 @@ namespace WzFrame.Shared.Services
             };
             return result;
         }
+
+
+
 
         public async Task<TEntity> GetAsync(long id)
         {

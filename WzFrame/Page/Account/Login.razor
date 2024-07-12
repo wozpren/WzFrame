@@ -103,12 +103,7 @@
         </div>
     </div>
 </div>
-@if(ErrorMessage is not null)
-{
-    <div class="position-fixed" style="top: 10px;left:50%;transform: translateX(-50%);">
-        <Alert Color="Color.Danger">@ErrorMessage</Alert>
-    </div>
-}
+
 
 
 @code {
@@ -121,6 +116,12 @@
     [SupplyParameterFromForm(FormName = "register")]
     protected RegisterInput RegisterModel { get; set; } = new RegisterInput();
 
+    [CascadingParameter]
+    public string? ErrorMessage { get; set; }
+
+    [CascadingParameter]
+    public string? GoodMessage { get; set; }
+
 
     [NotNull]
     protected WebsiteConfig? websiteConfig { get; set; }
@@ -129,7 +130,6 @@
 
     protected bool IsRegister { get; set; }
 
-    private string? ErrorMessage { get; set; }
 
 
     protected override void OnParametersSet()
@@ -183,10 +183,17 @@
             }
             else if (result.IsLockedOut)
             {
+                GenerateCaptcha();
                 ErrorMessage = "账号被锁定，请稍后再试";
+            }
+            else if (result.IsNotAllowed)
+            {
+                GenerateCaptcha();
+                ErrorMessage = "账号未激活，请检查邮箱";
             }
             else
             {
+                GenerateCaptcha();
                 ErrorMessage = "登录失败，请检查账号密码";
             }
         }
@@ -207,7 +214,7 @@
                 UserName = RegisterModel.UserName,
                 Email = RegisterModel.Email
             };
-        if (!UserManager.Options.SignIn.RequireConfirmedAccount)
+        if (!UserManager.Options.SignIn.RequireConfirmedEmail)
         {
             user.EmailConfirmed = true;
         }
@@ -215,10 +222,12 @@
         var result = await UserManager.CreateAsync(user, RegisterModel.Password);
         if (result.Succeeded)
         {
+            GoodMessage = "注册成功，请登录";
             RedirectManager.RedirectTo("/Account/Login");
         }
         else
         {
+            GenerateCaptcha();
             ErrorMessage = string.Join("\n", result.Errors.Select(error => error.Description));
         }
     }

@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WzFrame.Id", "WzFrame.Id\Wz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WzFrame.Identity.SqlSugar", "WzFrame.Identity.SqlSugar\WzFrame.Identity.SqlSugar.csproj", "{EBB2D093-7E0C-4760-A53B-D7D7CB0B5ED4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WzFrame.Eshop", "WzFrame.Eshop\WzFrame.Eshop.csproj", "{795C8054-12C5-44FB-98CA-B449AB84C828}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{EBB2D093-7E0C-4760-A53B-D7D7CB0B5ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBB2D093-7E0C-4760-A53B-D7D7CB0B5ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBB2D093-7E0C-4760-A53B-D7D7CB0B5ED4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{795C8054-12C5-44FB-98CA-B449AB84C828}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{795C8054-12C5-44FB-98CA-B449AB84C828}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{795C8054-12C5-44FB-98CA-B449AB84C828}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{795C8054-12C5-44FB-98CA-B449AB84C828}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
