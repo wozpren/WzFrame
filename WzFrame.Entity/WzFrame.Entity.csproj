@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Enum\**" />
+    <Compile Remove="Shop\**" />
+    <EmbeddedResource Remove="Enum\**" />
+    <EmbeddedResource Remove="Shop\**" />
+    <None Remove="Enum\**" />
+    <None Remove="Shop\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="SqlSugarCore" Version="5.1.4.154-preview04" />
   </ItemGroup>
@@ -14,11 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BootstrapBlazor\src\BootstrapBlazor\BootstrapBlazor.csproj" />
     <ProjectReference Include="..\WzFrame.Identity.SqlSugar\WzFrame.Identity.SqlSugar.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Enum\" />
-    <Folder Include="Shop\" />
   </ItemGroup>
 
 </Project>
