@@ -9,6 +9,7 @@
 @inject NavigationManager NavigationManager
 @inject ToastService ToastService
 @inject HubService HubService
+@inject WebService WebService
 <BootstrapBlazorRoot>
 <CascadingValue Value="MenuOptions">
         <CascadingValue Value="User">
@@ -94,6 +95,7 @@
         else
         {
             User = applicationUser.Adapt<UserDTO>();
+            WebService.ResgisterUser(User);
             return true;
         }
     }

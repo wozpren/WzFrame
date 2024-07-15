@@ -1,7 +1,7 @@
 ﻿@page "/SendNotification"
 @inherits TabPageBase
 @attribute [MenuPageOption(200, "工作间", Icon = "fas fa-house", Type = MenuType.Directory, Order = 29)]
-@attribute [MenuPageOption(201, "发送通知", Icon = "fas fa-computer", ParentId=200)]
+@attribute [MenuPageOption(201, "发送通知", Icon = "fas fa-computer", ParentId=200, Permission = "admin")]
 @inject Shared.Services.NotificationService NotificationService
 
 <Button OnClick="SendNotification" Text="发送通知"/>

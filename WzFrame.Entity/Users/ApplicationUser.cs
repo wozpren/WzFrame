@@ -83,7 +83,7 @@ namespace WzFrame.Entity.Users
 
         [SugarColumn(IsIgnore = true)]
         [AutoGenerateColumn(Text = "角色", IsVisibleWhenAdd = false, IsReadonlyWhenEdit = false)]
-        public string? RolesString => string.Join(",", Roles?.Select(x => x.Name));
+        public string? RolesString => string.Join(",", Roles.Select(x => x.DisplayName));
 
         [SqlSugar.SugarColumn(IsEnableUpdateVersionValidation = true)]
         [AutoGenerateColumn(Ignore = true)]
@@ -95,7 +95,7 @@ namespace WzFrame.Entity.Users
         [AutoGenerateColumn(Text = "描述", Visible = false, IsVisibleWhenEdit = true)]
         public string? Description { get; set; }
 
-
-
+        [AutoGenerateColumn(Text = "所属机构")]
+        public string Belong { get; set; } = string.Empty;
     }
 }

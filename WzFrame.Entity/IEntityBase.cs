@@ -9,6 +9,7 @@ using WzFrame.Entity.Attributes;
 using WzFrame.Entity.Consts;
 using WzFrame.Entity.Users;
 using WzFrame.Entity.DTO;
+using WzFrame.Entity.Work;
 
 namespace WzFrame.Entity
 {
@@ -53,16 +54,24 @@ namespace WzFrame.Entity
     public abstract class EntityUserTimeBase : IEntityBase
     {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = false)]
+        [AutoGenerateColumn(Ignore = true)]
         public virtual long Id { get; set; }
 
+        [AutoGenerateColumn(Text = "创建时间", IsVisibleWhenAdd = false, IsVisibleWhenEdit = false)]
         public virtual DateTime? CreateTime { get; set; }
+
+        [AutoGenerateColumn(Text = "创建者Id", Ignore = true, IsVisibleWhenAdd = false, IsVisibleWhenEdit = false)]
         public virtual long? CreateUserId { get; set; }
 
         [Navigate(NavigateType.OneToOne, nameof(CreateUserId))]
+        [AutoGenerateColumn(Text = "创建者",  IsVisibleWhenAdd = false, IsVisibleWhenEdit = false)]
         public virtual UserDTO? CreateUser { get; set; }
 
 
+        [AutoGenerateColumn(Text = "更新时间", IsVisibleWhenAdd = false, IsVisibleWhenEdit = false)]
         public virtual DateTime? UpdateTime { get; set; }
+
+        [AutoGenerateColumn(Text = "更新者Id", Ignore = true, IsVisibleWhenAdd = false, IsVisibleWhenEdit = false)]
         public virtual long? UpdateUserId { get; set; }
     }
 }

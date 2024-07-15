@@ -22,18 +22,16 @@ namespace WzFrame.Shared.Services
     {
         private readonly IMemoryCache cache;
 
-        public MenuService(EntityRepository<MenuOption> entityRepository, IMemoryCache cache) : base(entityRepository)
+        public MenuService(EntityRepository<MenuOption> entityRepository, WebService webService, IMemoryCache cache) : base(entityRepository, webService)
         {
             this.cache = cache;
         }
-
 
         public Task<List<MenuOption>> GetTree()
         {
             return entityRepository.AsQueryable()
                 .ToTreeAsync(it => it.Children, it => it.ParentId, 0);
         }
-
 
         public async Task<List<MenuOption>> GetTree(AuthenticationState? state)
         {
@@ -68,7 +66,5 @@ namespace WzFrame.Shared.Services
                 }
             }
         }
-
-
     }
 }

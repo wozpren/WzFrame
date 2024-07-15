@@ -21,7 +21,7 @@ namespace WzFrame.Shared.Services
     {
         private readonly IdentityOptions options;
 
-        public UserService(EntityRepository<ApplicationUser> entityRepository, IOptions<IdentityOptions> options) : base(entityRepository)
+        public UserService(EntityRepository<ApplicationUser> entityRepository, IOptions<IdentityOptions> options, WebService webService) : base(entityRepository, webService)
         {
             this.options = options.Value;
         }

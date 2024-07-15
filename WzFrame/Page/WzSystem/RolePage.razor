@@ -3,7 +3,7 @@
 @attribute [MenuPageOption(103, "角色管理", ParentId = 100, Icon = "fas fa-address-book", Permission = "admin")]
 @inject EntityRepository<Role> entityRepository;
 
-<TablePageBase T="Role" DeleteAsync="OnDeleteAsync">
+<TablePageBase TItem="Role" DeleteAsync="OnDeleteAsync">
 
 </TablePageBase>
 
