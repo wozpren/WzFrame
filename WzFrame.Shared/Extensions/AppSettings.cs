@@ -25,6 +25,8 @@ namespace WzFrame.Shared
             throw new Exception($"Config {typeof(T).Name} not found");
         }
 
+
+
         public static void AddConfig<T>(JsonSerializerOptions jsonOptions) where T : class, IJsonConfiguration
         {
             string key = typeof(T).Name[0..^6];

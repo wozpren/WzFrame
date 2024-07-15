@@ -66,7 +66,6 @@ namespace WzFrame.Shared.Services
                 IsSearch = true,
             };
             return result;
-
         }
 
         public async Task<bool> OnSaveAsync(ApplicationUser user, ItemChangedType changedType)

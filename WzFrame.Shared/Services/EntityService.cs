@@ -62,7 +62,13 @@ namespace WzFrame.Shared.Services
                 entityBase.CreateTime = DateTime.Now;
             }
 
-            return await entityRepository.InsertReturnSnowflakeIdAsync(entity);
+            if (entity.Id == 0)
+                return await entityRepository.InsertReturnSnowflakeIdAsync(entity);
+            else
+            {
+                await entityRepository.InsertAsync(entity);
+                return entity.Id;
+            }
         }
 
         public async virtual Task<bool> UpdateAsync(TEntity entity)

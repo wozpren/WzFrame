@@ -1,12 +1,15 @@
 ﻿@using WzFrame.Entity.Work;
 @page "/workshop/worker"
 @inject EntityService<Worker> entityService
-
+@inject IJSRuntime JSRuntime;
 @inherits TabPageBase
 @attribute [MenuPageOption(203, "工人管理", Icon = "fas fa-person-digging", ParentId = 200, Permission = "admin, worker")]
 
 
-<TablePageBase TItem="Worker" QueryAsync="OnQueryAsync" SaveAsync="OnSaveAsync">
+<TablePageBase TItem="Worker" QueryAsync="OnQueryAsync" SaveAsync="OnSaveAsync">    
+    <RowButtonTemplate>
+        <TableCellButton Color="Color.Primary" Icon="fas fa-eye" Text="查看" OnClick="() =>Watch(context)" />
+    </RowButtonTemplate>
     <TableColumnsTemplate>
         <TableColumn @bind-Field="@context.CreateUser">
             <Template Context="vs">
@@ -47,5 +50,10 @@
                 t.Belong = User?.Belong ?? "";
                 return await entityService.entityRepository.UpdateAsync(t);
         }
+    }
+
+    private async Task Watch(Worker worker)
+    {
+        await JSRuntime.InvokeVoidAsync("open", "https://baidu.com", "_blank");
     }
 }

@@ -21,6 +21,7 @@ using Quartz;
 using Microsoft.AspNetCore.ResponseCompression;
 using WzFrame.Shared.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using OnceMi.AspNetCore.OSS;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -101,6 +102,10 @@ builder.Services.AddHttpClient("eshop", p =>
 {
     p.BaseAddress = new Uri("http://wwww.553vip.com");
 });
+
+builder.Services.AddOSSService("OSSProvider");
+
+
 
 var app = builder.Build();
 app.ConfigureApp();

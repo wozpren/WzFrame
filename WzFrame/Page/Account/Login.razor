@@ -79,21 +79,24 @@
                                 </div>
                                 <Button ButtonType="ButtonType.Submit"
                                         Text="登录" Color="Color.Primary"></Button>
-                                <Divider Text="其他登录方式" />
-                                <div class="login-oauth">
-                                    <div class="login-oauth-item">
-                                        <i class="fa-brands fa-github"></i>
+                                @if(websiteConfig.SupportThirdLogin)
+                                {
+                                    <Divider Text="其他登录方式" />
+                                    <div class="login-oauth">
+                                        <div class="login-oauth-item">
+                                            <i class="fa-brands fa-github"></i>
+                                        </div>
+                                        <div class="login-oauth-item">
+                                            <i class="fa-brands fa-twitter"></i>
+                                        </div>
+                                        <div class="login-oauth-item">
+                                            <i class="fa-brands fa-apple"></i>
+                                        </div>
+                                        <div class="login-oauth-item">
+                                            <i class="fa-brands fa-facebook"></i>
+                                        </div>
                                     </div>
-                                    <div class="login-oauth-item">
-                                        <i class="fa-brands fa-twitter"></i>
-                                    </div>
-                                    <div class="login-oauth-item">
-                                        <i class="fa-brands fa-apple"></i>
-                                    </div>
-                                    <div class="login-oauth-item">
-                                        <i class="fa-brands fa-facebook"></i>
-                                    </div>
-                                </div>
+                                }
                             </EditForm>
                         }
 
@@ -103,6 +106,12 @@
         </div>
     </div>
 </div>
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <div class="float-top">
+        <Alert Color="Color.Danger">@ErrorMessage</Alert>
+    </div>
+}
 
 
 
@@ -159,7 +168,7 @@
     {
         RegisterModel.CaptchaId = LoginModel.CaptchaId = Guid.NewGuid().ToString();
         var captchaData = captcha.Generate(LoginModel.CaptchaId);
-        RegisterModel.Captcha = LoginModel.Captcha = captchaData.Code;
+        //RegisterModel.Captcha = LoginModel.Captcha = captchaData.Code;
         //var stream = new MemoryStream(captchaData.Bytes);
         captchaUrl = $"data:image/png;base64,{Convert.ToBase64String(captchaData.Bytes)}";
     }
@@ -202,6 +211,11 @@
 
     private async Task OnRegister()
     {
+        if(!websiteConfig.SupportRegister)
+        {
+            ErrorMessage = "网站暂不支持注册";
+            return;
+        }
         if (!captcha.Validate(RegisterModel.CaptchaId, RegisterModel.Captcha))
         {
             GenerateCaptcha();

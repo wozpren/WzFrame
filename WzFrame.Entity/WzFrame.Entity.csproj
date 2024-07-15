@@ -7,18 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Enum\**" />
+    <Compile Remove="Shop\**" />
+    <EmbeddedResource Remove="Enum\**" />
+    <EmbeddedResource Remove="Shop\**" />
+    <None Remove="Enum\**" />
+    <None Remove="Shop\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.17" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.154-preview04" />
+    <PackageReference Include="OnceMi.AspNetCore.OSS" Version="1.2.0" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.162" />
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\BootstrapBlazor\src\BootstrapBlazor\BootstrapBlazor.csproj" />
     <ProjectReference Include="..\WzFrame.Identity.SqlSugar\WzFrame.Identity.SqlSugar.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Enum\" />
-    <Folder Include="Shop\" />
   </ItemGroup>
 
 </Project>

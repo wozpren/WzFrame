@@ -8,9 +8,9 @@
 @attribute [MenuPageOption(102, "用户管理", ParentId = 100, Icon = "fas fa-users-line", Permission = "admin")]
 
 
-<TablePageBase T="ApplicationUser" QueryAsync="UserService.OnQueryAsync" DeleteAsync="UserService.OnDeleteAsync" SaveAsync="UserService.OnSaveAsync">
+<TablePageBase TItem="ApplicationUser" QueryAsync="UserService.OnQueryAsync" DeleteAsync="UserService.OnDeleteAsync" SaveAsync="UserService.OnSaveAsync">
     <RowButtonTemplate>
-        <TableCellButton TItem="ApplicationUser" Icon="fa-fw fa-solid fa-pen-to-square" Text="角色" OnClick="() => UserService.SetRole(context)" Color="Color.Primary" />
+        <TableCellButton Icon="fa-fw fa-solid fa-pen-to-square" Text="角色" OnClick="() => UserService.SetRole(context)" Color="Color.Primary" />
     </RowButtonTemplate>
 </TablePageBase>
 <Modal>

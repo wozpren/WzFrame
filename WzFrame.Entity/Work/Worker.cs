@@ -12,6 +12,10 @@ namespace WzFrame.Entity.Work
     {
         [AutoGenerateColumn(Text = "姓名")]
         public string Name { get; set; } = string.Empty;
+
+        [AutoGenerateColumn(Text = "头像")]
+        public string Avatar { get; set; } = string.Empty;
+
         [AutoGenerateColumn(Text = "身份证号")]
         public string Identity { get; set; } = string.Empty;
         [AutoGenerateColumn(Text = "操作机型")]
