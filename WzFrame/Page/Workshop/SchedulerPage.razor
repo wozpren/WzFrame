@@ -3,7 +3,7 @@
 @using Quartz.Impl
 @using WzFrame.Shared.Job
 @inherits TabPageBase
-@attribute [MenuPageOption(202, "任务管理", Icon = "fas fa-computer", ParentId = 200)]
+@attribute [MenuPageOption(202, "任务管理", Icon = "fas fa-computer", ParentId = 200, Permission = "admin")]
 
 @inject JobService JobService
 

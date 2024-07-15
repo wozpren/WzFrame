@@ -19,7 +19,7 @@ namespace WzFrame.Shared.Services
         private readonly IHubContext<BlazorHub> hubContext;
         private readonly HubService hubServer;
 
-        public NotificationService(EntityRepository<UserNotification> entityRepository, IHubContext<BlazorHub> hubContext, HubService hubServer) : base(entityRepository)
+        public NotificationService(EntityRepository<UserNotification> entityRepository, IHubContext<BlazorHub> hubContext, HubService hubServer, WebService webService) : base(entityRepository, webService)
         {
             this.hubContext = hubContext;
             this.hubServer = hubServer;

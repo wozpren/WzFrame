@@ -1,9 +1,10 @@
 ﻿@using WzFrame.Entity.Interfaces
-@typeparam T where T : class, IEntityBase, new()
+@typeparam TItem where TItem : class, IEntityBase, new()
 @inherits TabPageBase
-@inject EntityService<T> entityService
+@inject EntityService<TItem> entityService
+@attribute [CascadingTypeParameter(nameof(TItem))]
 
-<Table TItem="T" AutoGenerateColumns="true" class="table-demo"
+<Table TItem="TItem" AutoGenerateColumns="true" class="table-demo"
        IsPagination="true" PageItemsSource="PageItemsSource"
        IsBordered="true" IsMultipleSelect="true"
        ShowSkeleton="true" ShowToolbar="true" ShowEditButton="false" ShowSearch="true" ShowExtendButtons="true"
@@ -14,24 +15,24 @@
 
 @code{
     [Parameter]
-    public RenderFragment<T>? EditerTemplate { get; set; }
+    public RenderFragment<TItem>? EditerTemplate { get; set; }
 
     [Parameter]
-    public RenderFragment<T>? TableColumnsTemplate { get; set; }
+    public RenderFragment<TItem>? TableColumnsTemplate { get; set; }
 
     [Parameter]
-    public RenderFragment<T>? RowButtonTemplate { get; set; }
+    public RenderFragment<TItem>? RowButtonTemplate { get; set; }
 
 
 
     [Parameter]
-    public Func<QueryPageOptions, Task<QueryData<T>>>? QueryAsync { get; set; }
+    public Func<QueryPageOptions, Task<QueryData<TItem>>>? QueryAsync { get; set; }
 
     [Parameter]
-    public Func<T, ItemChangedType, Task<bool>>? SaveAsync { get; set; }
+    public Func<TItem, ItemChangedType, Task<bool>>? SaveAsync { get; set; }
 
     [Parameter]
-    public Func<IEnumerable<T>, Task<bool>>? DeleteAsync { get; set; }
+    public Func<IEnumerable<TItem>, Task<bool>>? DeleteAsync { get; set; }
 
     protected IEnumerable<int> PageItemsSource => new int[] { 10, 20, 50, 100 };
 
@@ -39,7 +40,7 @@
 
 
 
-    protected async Task<QueryData<T>> OnQueryAsync(QueryPageOptions options)
+    protected async Task<QueryData<TItem>> OnQueryAsync(QueryPageOptions options)
     {
         if (QueryAsync != null)
             return await QueryAsync(options);
@@ -47,7 +48,7 @@
             return await entityService.QueryAsync(options);
     }
 
-    protected async Task<bool> OnSaveAsync(T t, ItemChangedType changedType)
+    protected async Task<bool> OnSaveAsync(TItem t, ItemChangedType changedType)
     {
         if (SaveAsync != null)
         {
@@ -62,7 +63,7 @@
         return true;
     }
 
-    protected async Task<bool> OnDeleteAsync(IEnumerable<T> items)
+    protected async Task<bool> OnDeleteAsync(IEnumerable<TItem> items)
     {
         if (DeleteAsync != null)
             return await DeleteAsync(items);

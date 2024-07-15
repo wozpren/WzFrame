@@ -1,5 +1,5 @@
-﻿using BootstrapBlazor.Components;
-using Masuit.Tools.Core.AspNetCore;
+﻿using AngleSharp.Dom;
+using BootstrapBlazor.Components;
 using Microsoft.Extensions.DependencyInjection;
 using SqlSugar;
 using System;
@@ -18,13 +18,15 @@ namespace WzFrame.Shared.Services
     public class EntityService<TEntity> where TEntity : class, IEntityBase, new()
     {
 
-        protected readonly EntityRepository<TEntity> entityRepository;
+        public readonly EntityRepository<TEntity> entityRepository;
 
-        public EntityService(EntityRepository<TEntity> entityRepository)
+        private readonly WebService webService;
+
+        public EntityService(EntityRepository<TEntity> entityRepository, WebService webService)
         {
             this.entityRepository = entityRepository;
+            this.webService = webService;
         }
-
 
         public async Task<QueryData<TEntity>> QueryAsync(QueryPageOptions queryPageOptions)
         {
@@ -35,15 +37,12 @@ namespace WzFrame.Shared.Services
             {
                 Items = data,
                 TotalCount = totalcount,
-                IsFiltered = true,
-                IsAdvanceSearch = true,
-                IsSearch = true,
+                IsFiltered = false,
+                IsAdvanceSearch = false,
+                IsSearch = false,
             };
             return result;
         }
-
-
-
 
         public async Task<TEntity> GetAsync(long id)
         {
@@ -51,14 +50,30 @@ namespace WzFrame.Shared.Services
         }
 
 
-        public async virtual Task<long> AddAsync(TEntity menu)
+        public async virtual Task<long> AddAsync(TEntity entity)
         {
-            return await entityRepository.InsertReturnSnowflakeIdAsync(menu);
+            if(entity is EntityUserBase userEntity)
+            {
+                userEntity.CreateUser = webService.CurrentUser;
+            }
+            else if(entity is EntityUserTimeBase entityBase)
+            {
+                entityBase.CreateUserId = webService.CurrentUser?.Id;
+                entityBase.CreateTime = DateTime.Now;
+            }
+
+            return await entityRepository.InsertReturnSnowflakeIdAsync(entity);
         }
 
-        public async virtual Task<bool> UpdateAsync(TEntity menu)
+        public async virtual Task<bool> UpdateAsync(TEntity entity)
         {
-            return await entityRepository.UpdateAsync(menu);
+            if (entity is EntityUserTimeBase entityBase)
+            {
+                entityBase.UpdateTime = DateTime.Now;
+                entityBase.UpdateUserId = webService.CurrentUser?.Id;
+            }
+
+            return await entityRepository.UpdateAsync(entity);
         }
 
         public async virtual Task<bool> DeletesAsync(IEnumerable<TEntity> entitys)

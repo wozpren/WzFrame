@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WzFrame.Entity.DTO
 {
-    public class RoleMessage
+    public class RoleDto
     {
         public string? DisplayName { get; set; }
 
