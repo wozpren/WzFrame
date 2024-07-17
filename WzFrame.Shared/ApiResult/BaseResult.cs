@@ -52,11 +52,10 @@ namespace WzFrame.Shared.ApiResult
         /// </summary>
         public T? Data { get; set; }
 
-        public Result(T t)
+        public Result(T? data)
         {
-            Data = t;
             Succeeded = true;
+            Data = data;
         }
-
     }
 }

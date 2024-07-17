@@ -16,8 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.17" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.154-preview04" />
+    <PackageReference Include="OnceMi.AspNetCore.OSS" Version="1.2.0" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.162" />
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

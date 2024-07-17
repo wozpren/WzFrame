@@ -1,6 +1,7 @@
 {
   "IsOpen": true,
   "SupportRegister": true,
+  "SupportThirdLogin": true,
   "SupportFindPassword": false,
   "SiteName": "WzFrame",
   "SiteDescription": "个人开发Blazor框架",

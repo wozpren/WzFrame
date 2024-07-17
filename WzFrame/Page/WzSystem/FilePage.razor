@@ -1,0 +1,111 @@
+﻿@page "/system/file"
+@using OnceMi.AspNetCore.OSS
+@using System.Security.Cryptography
+@using Yitter.IdGenerator
+@inherits TabPageBase
+@attribute [MenuPageOption(108, "文件管理", Icon = "fas fa-folder", ParentId = 100, Permission = "admin,worker")]
+
+@inject ToastService ToastService;
+@inject IOSSService OSSService;
+@inject EntityService<OssFile> entityService;
+@inject IConfiguration Configuration;
+
+<Table @ref="table" TItem="OssFile" AutoGenerateColumns="true" IsPagination="true" IsBordered="true"
+       ShowSkeleton="true" ShowToolbar="true" ShowEditButton="false" ShowSearch="true" ShowExtendButtons="true" FixedExtendButtonsColumn="true"
+       ShowAddButton="false" ShowSearchButton="false" ShowDeleteButton="false" OnQueryAsync="OnQueryAsync">
+       <TableToolbarBeforeTemplate>
+           <TableToolbarComponent>
+            <ButtonUpload TValue="string" IsMultiple="true" ShowProgress="false" OnChange="@OnClickToUpload" DisplayText="上传"></ButtonUpload>
+           </TableToolbarComponent>
+       </TableToolbarBeforeTemplate>
+       <TableColumns>
+           <TableColumn @bind-Field="@context.Url">
+            <Template Context="value">
+                <a href="@value.Value" target="_blank">@value.Value</a>
+               </Template>
+           </TableColumn>           
+       </TableColumns>
+</Table>
+
+
+
+@code {
+    private Table<OssFile> table;
+
+    protected async Task<QueryData<OssFile>> OnQueryAsync(QueryPageOptions options)
+    {
+        return await entityService.QueryAsync(options);
+    }
+
+    public async Task OnClickToUpload(UploadFile file)
+    {
+        var opt = Configuration.GetSection("OSSProvider").Get<OSSProviderOptions>();
+        if(opt != null)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var maxSize = 1 * 1024 * 1024;
+                await file.SaveToStreamAsync(ms, maxSize);
+                if(file.Code != 0)
+                {
+                    await ToastService.Error("上传错误", file.Error);
+                    return;
+                }
+
+                using (var md5 = MD5.Create())
+                {
+                    // 计算文件流的MD5哈希值
+                    var hashBytes = md5.ComputeHash(ms);
+                    ms.Position = 0;
+
+                    // 将字节数组转换为十六进制字符串
+                    var fileMd5 = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+                    var sizeKb = (long)(file.Size / 1024.0); // 大小KB
+                                                             //按年/月/日划分文件夹
+                                                             // 获取当前日期
+                    var currentDate = DateTime.Now;
+                    // 构建基于年月日的文件夹路径
+                    var path = $"Upload/{currentDate.ToString("yyyy")}/{currentDate.ToString("MM")}/{currentDate.ToString("dd")}";
+
+                    var suffix = Path.GetExtension(file.OriginFileName)?.ToLower() ?? "";
+
+                    var newFile = new OssFile
+                        {
+                            Id = YitIdHelper.NextId(),
+                            // BucketName = _OSSProviderOptions.IsEnable ? _OSSProviderOptions.Provider.ToString() : "Local",
+                            // 阿里云对bucket名称有要求，1.只能包括小写字母，数字，短横线（-）2.必须以小写字母或者数字开头  3.长度必须在3-63字节之间
+                            // 无法使用Provider
+                            BucketName = opt.Bucket,
+                            FileName = Path.GetFileNameWithoutExtension(file.OriginFileName),
+                            Suffix = suffix,
+                            SizeKb = sizeKb.ToString(),
+                            FilePath = path,
+                            FileMd5 = fileMd5,
+                        };
+                    var finalName = newFile.Id + suffix;
+
+                    newFile.Provider = Enum.GetName(opt.Provider);
+                    var filePath = $"{path}/{finalName}";
+
+                    await OSSService.PutObjectAsync(newFile.BucketName, filePath, ms);
+                    switch (opt.Provider)
+                    {
+                        case OSSProvider.QCloud:
+                            newFile.Url = $"{(opt.IsEnableHttps ? "https" : "http")}://{opt.Url}/{filePath}";
+                            break;
+                    }
+
+                    await entityService.AddAsync(newFile);
+                    await table.QueryAsync();
+                }
+            }
+
+
+
+
+
+        }
+
+    }
+
+}

@@ -1,0 +1,12 @@
+﻿<Avatar Url="@($"https://api.multiavatar.com/{Avatar}.png")" style="@Style" IsCircle="true" IsBorder="true" Size="Size" />
+
+@code {
+    [Parameter]
+    public string Avatar { get; set; } = "1145141919810";
+
+    [Parameter]
+    public string? Style { get; set; }
+
+    [Parameter]
+    public Size Size { get; set; } = Size.Medium;
+}

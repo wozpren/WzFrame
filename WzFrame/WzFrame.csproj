@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>60ea6f3b-6bbd-4fee-90a9-ac80162c8280</UserSecretsId>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -16,25 +17,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Page\Article\**" />
+    <Content Remove="Page\Article\**" />
+    <EmbeddedResource Remove="Page\Article\**" />
+    <None Remove="Page\Article\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
     <PackageReference Include="BootstrapBlazor.FontAwesome" Version="8.0.2" />
+    <PackageReference Include="log4net" Version="2.0.17" />
     <PackageReference Include="Mapster" Version="7.4.0" />
-    <PackageReference Include="Masuit.Tools.AspNetCore" Version="2024.1.0" />
-    <PackageReference Include="Masuit.Tools.Core" Version="2024.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.4" />
+    <PackageReference Include="Masuit.Tools.AspNetCore" Version="2024.4.2" />
+    <PackageReference Include="Masuit.Tools.Core" Version="2024.4.2" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.7" />
+    <PackageReference Include="OnceMi.AspNetCore.OSS" Version="1.2.0" />
     <PackageReference Include="Quartz" Version="3.8.1" />
     <PackageReference Include="Quartz.AspNetCore" Version="3.8.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WzFrame.Identity.SqlSugar\WzFrame.Identity.SqlSugar.csproj" />
     <ProjectReference Include="..\WzFrame.Shared\WzFrame.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Page\Article\" />
   </ItemGroup>
 
   <ItemGroup>

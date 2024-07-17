@@ -35,16 +35,22 @@ namespace WzFrame.Entity
     {
 
         [SugarColumn(IsPrimaryKey = true, IsIdentity = false)]
+        [AutoGenerateColumn(Ignore = true)]
         public virtual long Id { get; set; }
     }
 
     public abstract class EntityUserBase : IEntityBase
     {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = false)]
+        [AutoGenerateColumn(Ignore = true)]
         public virtual long Id { get; set; }
 
 
-        [Navigate(NavigateType.OneToOne, nameof(Id))]
+        [AutoGenerateColumn(Text = "创建者Id", Ignore = true, IsVisibleWhenAdd = false, IsVisibleWhenEdit = false)]
+        public virtual long? CreateUserId { get; set; }
+
+        [Navigate(NavigateType.OneToOne, nameof(CreateUserId))]
+        [AutoGenerateColumn(Text = "创建者",  IsVisibleWhenAdd = false, IsVisibleWhenEdit = false)]
         public virtual UserDTO? CreateUser { get; set; }
     }
 

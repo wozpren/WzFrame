@@ -14,3 +14,7 @@
     border-bottom: 1px solid #0000001f;
     justify-content: center;
 }
+
+.col-form-label {
+    text-align: right;
+}

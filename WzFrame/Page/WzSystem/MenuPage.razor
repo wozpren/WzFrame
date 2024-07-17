@@ -8,7 +8,8 @@
 @inject MenuService MenuService
 @inject ToastService ToastService
 
-<TreeTablePageBase PageItems="50" TItem="MenuOption" OnDataChanged="GetData" OnSaved="SaveMenu" OnEditAsync="OnOpenEdit">
+<TreeTablePageBase 
+    PageItems="50" TItem="MenuOption" OnDataChanged="GetData" OnSaved="SaveMenu" OnEditAsync="OnOpenEdit">
     <TableColumns>
         <TableColumn Align="Alignment.Center" Text="图标" Width="40" @bind-Field="@context.Icon">
             <Template Context="vs">

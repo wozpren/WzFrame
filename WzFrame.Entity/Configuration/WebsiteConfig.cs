@@ -11,6 +11,7 @@ namespace WzFrame.Entity.Configuration
     {
         public bool IsOpen { get; set; } = true;
         public bool SupportRegister { get; set; }
+        public bool SupportThirdLogin { get; set; }
         public bool SupportFindPassword { get; set; }
         public string SiteName { get; set; } = "WzFrame";
 

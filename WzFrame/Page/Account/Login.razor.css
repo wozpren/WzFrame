@@ -1,6 +1,6 @@
 ﻿.full-page {
     height: 100vh;
-    padding: 60px 0;
+    padding-top: 60px;
 }
 
 .login-item-gitee {
@@ -87,4 +87,12 @@
         padding-left: 1rem;
         padding-right: 1rem;
     }
+}
+
+
+.float-top {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
 }

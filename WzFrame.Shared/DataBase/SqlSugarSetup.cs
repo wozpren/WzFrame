@@ -131,7 +131,6 @@ public static class SqlSugarSetup
         {
             var entityTypes = App.EffectiveTypes.Where(u => !u.IsInterface && !u.IsAbstract && u.IsClass && u.IsDefined(typeof(SugarTable), false) && !u.IsDefined(typeof(DoNotCreateTableAttribute)));
 
-
             //if (dbConfig.ConfigId.ToString() == DatabaseConst.SystemDbConfigId)
             //{
             //    entityTypes = entityTypes.Where(u => u.IsDefined(typeof(SysTableAttribute)));

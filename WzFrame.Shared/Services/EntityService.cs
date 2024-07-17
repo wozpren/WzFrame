@@ -20,7 +20,7 @@ namespace WzFrame.Shared.Services
 
         public readonly EntityRepository<TEntity> entityRepository;
 
-        private readonly WebService webService;
+        protected readonly WebService webService;
 
         public EntityService(EntityRepository<TEntity> entityRepository, WebService webService)
         {
@@ -62,7 +62,13 @@ namespace WzFrame.Shared.Services
                 entityBase.CreateTime = DateTime.Now;
             }
 
-            return await entityRepository.InsertReturnSnowflakeIdAsync(entity);
+            if (entity.Id == 0)
+                return await entityRepository.InsertReturnSnowflakeIdAsync(entity);
+            else
+            {
+                await entityRepository.InsertAsync(entity);
+                return entity.Id;
+            }
         }
 
         public async virtual Task<bool> UpdateAsync(TEntity entity)
