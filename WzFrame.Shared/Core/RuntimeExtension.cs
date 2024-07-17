@@ -26,7 +26,7 @@ namespace WzFrame.Shared.Core
                 }
                 catch (Exception e)
                 {
-                    //Log.Debug(e, "GetAllAssemblies Exception:{ex}", e.Message);
+                    Console.WriteLine("GetAllAssemblies Exception:{ex}", e.Message);
                 }
             }
 

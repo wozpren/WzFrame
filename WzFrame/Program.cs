@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using WzFrame.Shared.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using OnceMi.AspNetCore.OSS;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,9 @@ builder.Services.Configure<IdentityOptions>(config =>
     config.Password = new PasswordOptions
     {
         RequireNonAlphanumeric = false,
+        RequireUppercase = false,
+        RequiredLength = 6,
+        RequireLowercase = false,
     };
 });
 
@@ -79,7 +83,6 @@ builder.Services.AddScoped(typeof(EntityRepository<>));
 builder.Services.AddScoped(typeof(EntityService<>));
 
 
-builder.Services.AddMemoryCache();
 builder.Services.AddCaptcha(builder.Configuration);
 
 builder.Services.AddQuartz();
@@ -92,6 +95,8 @@ builder.Services.AddBootstrapBlazor(null, opt =>
 {
     opt.IgnoreLocalizerMissing = true;
 });
+
+
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -105,6 +110,19 @@ builder.Services.AddHttpClient("eshop", p =>
 
 builder.Services.AddOSSService("OSSProvider");
 
+var cors = builder.Configuration.GetSection("CorsPolicy").Get<CorsPolicy>();
+if(cors != null)
+{
+    builder.Services.AddCors(opt =>
+    {
+        opt.AddDefaultPolicy(policy =>
+        {
+            policy.AllowAnyOrigin()
+            .AllowAnyMethod();
+                
+        });
+    });
+}
 
 
 var app = builder.Build();
@@ -115,7 +133,6 @@ app.UseApplicationSetup();
 if (!app.Environment.IsDevelopment())
 {
     app.UseResponseCompression();
-
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
@@ -131,7 +148,9 @@ else
     });
 }
 
-app.UseHttpsRedirection();
+
+//app.UseHttpsRedirection();
+app.UseCors();
 
 app.UseStaticFiles();
 app.UseAntiforgery();

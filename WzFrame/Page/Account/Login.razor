@@ -155,9 +155,19 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+        if (HttpContext != null)
+        {
+            try
+            {
+                await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            }
+            catch(NullReferenceException e)
+            {
+                RedirectManager.Refresh(forceReload: true);
+            }
+        }
 
-        if (string.IsNullOrWhiteSpace(LoginModel.CaptchaId))
+        if (string.IsNullOrWhiteSpace(LoginModel.CaptchaId) && string.IsNullOrWhiteSpace(RegisterModel.CaptchaId))
         {
             GenerateCaptcha();
         }
@@ -220,6 +230,20 @@
         {
             GenerateCaptcha();
             ErrorMessage = "验证码错误";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(RegisterModel.Email) || string.IsNullOrWhiteSpace(RegisterModel.Password))
+        {
+            GenerateCaptcha();
+            ErrorMessage = "信息为空";
+            return;
+        }
+
+        if(RegisterModel.Password != RegisterModel.ConfirmPassword)
+        {
+            GenerateCaptcha();
+            ErrorMessage = "两次密码不一致";
             return;
         }
 

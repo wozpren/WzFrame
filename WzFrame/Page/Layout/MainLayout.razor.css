@@ -39,8 +39,8 @@ main {
 .main-layout .menu .submenu{
     display:flex;
     flex-direction: column;
-    gap: 4px;
-    padding:4px;
+    gap: 8px;
+    padding:8px;
 }
 
 

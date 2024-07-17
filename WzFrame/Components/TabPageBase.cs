@@ -37,7 +37,6 @@ namespace WzFrame.Components
                     TabItem.SetHeader(MenuOption.Name, MenuOption.Icon);
             }
         }
-
         protected override async Task OnParametersSetAsync()
         {
             if (StateProvider != null && MenuOption != null)
@@ -49,7 +48,6 @@ namespace WzFrame.Components
                 }
             }
         }
-
         protected bool CheckPermission(ClaimsPrincipal user, List<string>? permission)
         {
             if (permission == null || permission.Count == 0)

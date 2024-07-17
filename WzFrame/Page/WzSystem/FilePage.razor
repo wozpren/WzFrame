@@ -3,7 +3,7 @@
 @using System.Security.Cryptography
 @using Yitter.IdGenerator
 @inherits TabPageBase
-@attribute [MenuPageOption(108, "文件管理", Icon = "fas fa-folder", ParentId = 100, Permission = "admin")]
+@attribute [MenuPageOption(108, "文件管理", Icon = "fas fa-folder", ParentId = 100, Permission = "admin,worker")]
 
 @inject ToastService ToastService;
 @inject IOSSService OSSService;
@@ -11,7 +11,7 @@
 @inject IConfiguration Configuration;
 
 <Table @ref="table" TItem="OssFile" AutoGenerateColumns="true" IsPagination="true" IsBordered="true"
-       ShowSkeleton="true" ShowToolbar="true" ShowEditButton="false" ShowSearch="true" ShowExtendButtons="true"
+       ShowSkeleton="true" ShowToolbar="true" ShowEditButton="false" ShowSearch="true" ShowExtendButtons="true" FixedExtendButtonsColumn="true"
        ShowAddButton="false" ShowSearchButton="false" ShowDeleteButton="false" OnQueryAsync="OnQueryAsync">
        <TableToolbarBeforeTemplate>
            <TableToolbarComponent>

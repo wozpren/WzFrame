@@ -20,7 +20,7 @@ namespace WzFrame.Shared.Services
 
         public readonly EntityRepository<TEntity> entityRepository;
 
-        private readonly WebService webService;
+        protected readonly WebService webService;
 
         public EntityService(EntityRepository<TEntity> entityRepository, WebService webService)
         {

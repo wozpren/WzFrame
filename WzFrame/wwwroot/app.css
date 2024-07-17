@@ -170,6 +170,12 @@
     top: 0;
 }
 
-.mx-auto{
-    margin:0 auto;
+.width-fit{
+    width: fit-content;
+}
+
+.grid-two {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 12px;
 }

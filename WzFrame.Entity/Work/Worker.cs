@@ -13,7 +13,7 @@ namespace WzFrame.Entity.Work
         [AutoGenerateColumn(Text = "姓名")]
         public string Name { get; set; } = string.Empty;
 
-        [AutoGenerateColumn(Text = "头像")]
+        [AutoGenerateColumn(Text = "头像",  Visible = false)]
         public string Avatar { get; set; } = string.Empty;
 
         [AutoGenerateColumn(Text = "身份证号")]

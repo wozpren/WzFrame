@@ -83,7 +83,16 @@ namespace WzFrame.Entity.Users
 
         [SugarColumn(IsIgnore = true)]
         [AutoGenerateColumn(Text = "角色", IsVisibleWhenAdd = false, IsReadonlyWhenEdit = false)]
-        public string? RolesString => string.Join(",", Roles.Select(x => x.DisplayName));
+        public string? RolesString {
+            get
+            {
+                if (Roles == null || Roles.Count == 0)
+                {
+                    return string.Empty;
+                }
+                return string.Join(",", Roles.Select(x => x.DisplayName));
+            }
+        }
 
         [SqlSugar.SugarColumn(IsEnableUpdateVersionValidation = true)]
         [AutoGenerateColumn(Ignore = true)]

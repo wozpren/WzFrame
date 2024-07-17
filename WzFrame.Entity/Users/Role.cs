@@ -31,6 +31,7 @@ namespace WzFrame.Entity.Users
         public override string? ConcurrencyStamp { get => base.ConcurrencyStamp; set => base.ConcurrencyStamp = value; }
 
         [Navigate(typeof(IdentityUserRole), nameof(IdentityUserRole.RoleId), nameof(IdentityUserRole.UserId))]
+        [AutoGenerateColumn(Ignore = true)]
         public List<ApplicationUser>? Users { get; set; }
 
     }

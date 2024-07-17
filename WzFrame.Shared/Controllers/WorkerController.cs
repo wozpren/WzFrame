@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,17 @@ namespace WzFrame.Shared.Controllers
             this.entityService = entityService;
         }
 
+        [HttpGet("get")]
         public async Task<IActionResult> Get(long id)
         {
             var data = await entityService.GetAsync(id);
             return Ok(new Result<Worker>(data));
+        }
+
+        [HttpOptions("get")]
+        public IActionResult CheckGet(long id)
+        {
+            return NoContent();
         }
     }
 }
