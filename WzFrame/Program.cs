@@ -23,6 +23,7 @@ using WzFrame.Shared.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using OnceMi.AspNetCore.OSS;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Fluxor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -109,6 +110,10 @@ builder.Services.AddHttpClient("eshop", p =>
 });
 
 builder.Services.AddOSSService("OSSProvider");
+builder.Services.AddFluxor(options =>
+{
+    options.ScanAssemblies(typeof(Program).Assembly);
+});
 
 var cors = builder.Configuration.GetSection("CorsPolicy").Get<CorsPolicy>();
 if(cors != null)

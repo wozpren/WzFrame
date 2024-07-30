@@ -12,11 +12,17 @@
         <TableCellButton Color="Color.Primary" Icon="fas fa-eye" Text="查看" OnClick="() =>Watch(context)" />
     </RowButtonTemplate>
     <TableColumnsTemplate>
-        <TableColumn @bind-Field="@context.CreateUser">
+        <TableColumn @bind-Field="@context.TrainTime">
             <Template Context="vs">
-                <span>@vs?.Value?.UserName</span>
+                <span>@vs.Value.ToString("yyyy-MM-dd")</span>
             </Template>
         </TableColumn>
+        <TableColumn @bind-Field="@context.ValidTime">
+            <Template Context="vs">
+                <span>@vs.Value.ToString("yyyy-MM-dd")</span>
+            </Template>
+        </TableColumn>
+
     </TableColumnsTemplate>
 </TablePageBase>
 

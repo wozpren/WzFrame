@@ -10,6 +10,7 @@ using WzFrame.Entity.Consts;
 using WzFrame.Entity.Users;
 using WzFrame.Entity.DTO;
 using WzFrame.Entity.Work;
+using Masuit.Tools.Strings;
 
 namespace WzFrame.Entity
 {

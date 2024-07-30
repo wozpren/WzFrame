@@ -4,13 +4,15 @@
 @using WzFrame.Shared.Repository
 
 @inherits TabPageBase
+@inject UserManager<ApplicationUser> UserManager;
 @inject UserService UserService;
+@inject EntityService<Role> entityService;
 @attribute [MenuPageOption(102, "用户管理", ParentId = 100, Icon = "fas fa-users-line", Permission = "admin")]
 
 
 <TablePageBase TItem="ApplicationUser" QueryAsync="UserService.OnQueryAsync"  DeleteAsync="UserService.OnDeleteAsync" SaveAsync="UserService.OnSaveAsync">
     <RowButtonTemplate>
-        <TableCellButton Icon="fa-fw fa-solid fa-pen-to-square" Text="角色" OnClick="() => UserService.SetRole(context)" Color="Color.Primary" />
+        <TableCellButton Icon="fa-fw fa-solid fa-pen-to-square" Text="角色" OnClick="() => OpenSetRoleModal(context)" Color="Color.Primary" />
     </RowButtonTemplate>
 </TablePageBase>
 <Modal>
@@ -18,3 +20,65 @@
         <h5>设置角色</h5>
     </HeadContent>
 </Modal>
+
+
+<Modal @ref="roleModal" IsKeyboard="true">
+    <ModalDialog Size="Size.Small" Title="编辑角色" ShowCloseButton="false">
+        <BodyTemplate>
+            @if (roles != null && userRoles != null)
+            {
+                <div class="form-inline">
+                    @foreach (var role in roles)
+                    {
+                        <div>
+                            <Checkbox TValue="string" ShowLabel="true" Value="@role.Name"
+                                      State="@(userRoles.Contains(role.Name) ? CheckboxState.Checked : CheckboxState.UnChecked)"
+                                      OnStateChanged="@SetRoleAsync" DisplayText="@role.DisplayName" />
+                        </div>
+                    }
+                </div>
+            }
+        </BodyTemplate>
+    </ModalDialog>
+</Modal>
+
+@code{
+    private Modal? roleModal;
+
+    private List<(string? Name, string? DisplayName)>? roles;
+    private ApplicationUser? curUser;
+
+    private List<string>? userRoles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        roles = await entityService.entityRepository
+        .AsQueryable()
+        .Select<(string? Name, string? DisplayName)>("Name,DisplayName")
+        .ToListAsync();
+    }
+
+    public async Task OpenSetRoleModal(ApplicationUser user)
+    {
+        curUser = user;
+        userRoles = (await UserManager.GetRolesAsync(user)).ToList();
+        roleModal?.Show();
+    }
+
+    public async Task SetRoleAsync(CheckboxState state, string role)
+    {
+        if (curUser == null || userRoles == null)
+        {
+            return;
+        }
+
+        if (state == CheckboxState.Checked)
+        {
+            await UserManager.AddToRoleAsync(curUser, role);
+        }
+        else
+        {
+            await UserManager.RemoveFromRoleAsync(curUser, role);
+        }
+    }
+}
