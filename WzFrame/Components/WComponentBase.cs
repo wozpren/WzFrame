@@ -10,7 +10,9 @@ namespace WzFrame.Components
         protected AuthenticationStateProvider? StateProvider { get; set; }
 
         [Inject]
+#pragma warning disable CS8618
         protected NavigationManager NavigationManager { get; set; }
+#pragma warning restore CS8618
 
 
     }

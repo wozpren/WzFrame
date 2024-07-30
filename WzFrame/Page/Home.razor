@@ -11,6 +11,16 @@
             <p>遇到问题可以重新登陆、清理浏览器缓存</p>
             <p>开发者：Wozpren</p>
             <p>微信：wozpren</p>
+            <Button Color="Color.Primary" OnClick="@ErrorTest">测试异常</Button>
         </div>
     </div>
 </div>
+
+@code{
+
+
+    public void ErrorTest()
+    {
+        throw new Exception("测试异常");
+    }
+}
