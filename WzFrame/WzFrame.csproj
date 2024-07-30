@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Page\ErrorDialog.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
     <PackageReference Include="BootstrapBlazor.FontAwesome" Version="8.0.2" />
     <PackageReference Include="Fluxor.Blazor.Web" Version="6.0.0" />
@@ -56,18 +52,6 @@
     <Content Update="Configuration\Website.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Page\ErrorDialog.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Page\ErrorDialog.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Page\ErrorDialog.razor" />
   </ItemGroup>
 
 </Project>
