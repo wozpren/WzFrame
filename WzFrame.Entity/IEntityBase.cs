@@ -29,8 +29,6 @@ namespace WzFrame.Entity
     }
 
 
-    [SysTable]
-    [Tenant(DatabaseConst.SystemDbConfigId)]
     public abstract class SysEntity : IEntityBase
     {
 
@@ -51,7 +49,17 @@ namespace WzFrame.Entity
 
         [Navigate(NavigateType.OneToOne, nameof(CreateUserId))]
         [AutoGenerateColumn(Text = "创建者",  IsVisibleWhenAdd = false, IsVisibleWhenEdit = false)]
-        public virtual UserDTO? CreateUser { get; set; }
+        public virtual UserVO? CreateUser { get; set; }
+    }
+
+    public abstract class EntityOrgBase : EntityUserBase
+    {
+        [AutoGenerateColumn(Text = "组织Id", Ignore = true, IsVisibleWhenAdd = false, IsVisibleWhenEdit = false)]
+        public virtual long? OrgId { get; set; }
+
+        [Navigate(NavigateType.OneToOne, nameof(OrgId))]
+        [AutoGenerateColumn(Text = "组织",  IsVisibleWhenAdd = false, IsVisibleWhenEdit = false)]
+        public virtual Organization? Org { get; set; }
     }
 
 
@@ -70,7 +78,7 @@ namespace WzFrame.Entity
 
         [Navigate(NavigateType.OneToOne, nameof(CreateUserId))]
         [AutoGenerateColumn(Text = "创建者",  IsVisibleWhenAdd = false, IsVisibleWhenEdit = false)]
-        public virtual UserDTO? CreateUser { get; set; }
+        public virtual UserVO? CreateUser { get; set; }
 
 
         [AutoGenerateColumn(Text = "更新时间", IsVisibleWhenAdd = false, IsVisibleWhenEdit = false)]

@@ -23,7 +23,7 @@ namespace WzFrame.Entity.Users
         public long SendUserId { get; set; }
 
         [Navigate(NavigateType.OneToOne, nameof(SendUserId))]
-        public UserDTO? SendUser { get; set; }
+        public UserVO? SendUser { get; set; }
 
 
 

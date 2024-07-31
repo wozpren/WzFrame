@@ -12,9 +12,9 @@ namespace WzFrame.Shared.Services
     [ServiceInject(ServiceLifetime.Scoped)]
     public class WebService
     {
-        public UserDTO? CurrentUser { get; set; }
+        public UserVO? CurrentUser { get; set; }
 
-        public void ResgisterUser(UserDTO user)
+        public void ResgisterUser(UserVO user)
         {
             CurrentUser = user;
         }

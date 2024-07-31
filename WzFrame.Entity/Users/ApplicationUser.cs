@@ -33,6 +33,9 @@ namespace WzFrame.Entity.Users
         [SugarColumn(IsPrimaryKey = true)]
         public override long Id { get => base.Id; set => base.Id = value; }
 
+
+        public long OrgId { get; set; }
+
         [AutoGenerateColumn(Text = "用户名")]
         [SugarColumn(ColumnDescription = "用户姓名", Length = 60)]
         public override string? UserName { get => base.UserName; set => base.UserName = value; }
