@@ -11,7 +11,10 @@
             <p>遇到问题可以重新登陆、清理浏览器缓存</p>
             <p>开发者：Wozpren</p>
             <p>微信：wozpren</p>
-            <Button Color="Color.Primary" OnClick="@ErrorTest">测试异常</Button>
+
+            <BootstrapInputNumber TValue="int" />
+            <AutoComplete Items="@(["Yes1", "No1", "Test1"])" IsPopover="true" DisplayText="Test1" ShowLabel="true"></AutoComplete>
+            <AutoComplete Items="@(["Yes2", "No2", "Test2"])" IsPopover="false" DisplayText="Test2" ShowLabel="true"></AutoComplete>
         </div>
     </div>
 </div>
@@ -19,8 +22,4 @@
 @code{
 
 
-    public void ErrorTest()
-    {
-        throw new Exception("测试异常");
-    }
 }
