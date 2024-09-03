@@ -1,14 +1,32 @@
 ﻿@page "/system/role"
+@using Microsoft.AspNetCore.Identity
 @using WzFrame.Shared.Repository
 @attribute [MenuPageOption(103, "角色管理", ParentId = 100, Icon = "fas fa-address-book", Permission = "admin")]
 @inject EntityRepository<Role> entityRepository;
+@inject RoleManager<Role> roleManager;
 
-<TablePageBase TItem="Role" DeleteAsync="OnDeleteAsync">
+<TablePageBase TItem="Role" SaveAsync="OnSaveAsync" DeleteAsync="OnDeleteAsync">
 
 </TablePageBase>
 
 
 @code {
+
+    protected async Task<bool> OnSaveAsync(Role role, ItemChangedType item)
+    {
+        if(item == ItemChangedType.Add)
+        {
+            var result = await roleManager.CreateAsync(role);
+            return result.Succeeded;
+        }
+        else
+        {
+            var result = await roleManager.UpdateAsync(role);
+            return result.Succeeded;
+        }
+
+    }
+
 
     protected async Task<bool> OnDeleteAsync(IEnumerable<Role> items)
     {
