@@ -32,7 +32,9 @@ namespace WzFrame.Shared.Services
         {
             RefAsync<int> totalcount = 0;
 
-            var data = await entityRepository.AsQueryable().ToPageListAsync(queryPageOptions.PageIndex, queryPageOptions.PageItems, totalcount);
+            var data = await entityRepository.AsQueryable()
+                .OrderByDescending(te => te.Id)
+                .ToPageListAsync(queryPageOptions.PageIndex, queryPageOptions.PageItems, totalcount);
             var result = new QueryData<TEntity>()
             {
                 Items = data,
