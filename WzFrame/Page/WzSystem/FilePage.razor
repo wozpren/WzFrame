@@ -12,7 +12,8 @@
 
 <Table @ref="table" TItem="OssFile" AutoGenerateColumns="true" IsPagination="true" IsBordered="true"
        ShowSkeleton="true" ShowToolbar="true" ShowEditButton="false" ShowSearch="true" ShowExtendButtons="true" FixedExtendButtonsColumn="true"
-       ShowAddButton="false" ShowSearchButton="false" ShowDeleteButton="false" OnQueryAsync="OnQueryAsync">
+       ShowAddButton="false" ShowSearchButton="false" ShowDeleteButton="false" 
+       OnQueryAsync="OnQueryAsync" OnDeleteAsync="OnDeleteAsync">
        <TableToolbarBeforeTemplate>
            <TableToolbarComponent>
             <ButtonUpload TValue="string" IsMultiple="true" ShowProgress="false" OnChange="@OnClickToUpload" DisplayText="上传"></ButtonUpload>
@@ -35,6 +36,14 @@
     protected async Task<QueryData<OssFile>> OnQueryAsync(QueryPageOptions options)
     {
         return await entityService.QueryAsync(options);
+    }
+
+    private async Task<bool> OnDeleteAsync(IEnumerable<OssFile> items)
+    {
+        var filenames = items.Select(item => item.FileName).ToList();
+        var opt = Configuration.GetSection("OSSProvider").Get<OSSProviderOptions>();
+        await OSSService.RemoveObjectAsync(opt.Bucket, filenames);
+        return await entityService.DeletesAsync(items);
     }
 
     public async Task OnClickToUpload(UploadFile file)
