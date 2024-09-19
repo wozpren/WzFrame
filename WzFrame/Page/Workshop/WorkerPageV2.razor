@@ -6,7 +6,7 @@
 @attribute [MenuPageOption(213, "工人管理", Icon = "fas fa-person-digging", ParentId = 200, Permission = "admin,workerv2")]
 
 
-<TablePageBase TItem="WorkerP" SaveAsync="OnSaveAsync">
+<TablePageBase FixedExtendButtonsColumn="true" TItem="WorkerP" SaveAsync="OnSaveAsync" QueryAsync="OnQueryAsync">
     <RowButtonTemplate>
         <TableCellButton Color="Color.Primary" Icon="fas fa-eye" Text="查看" OnClick="() =>Watch(context)" />
     </RowButtonTemplate>
@@ -21,6 +21,11 @@
                 <span>@vs.Value.ToString("yyyy-MM-dd")</span>
             </Template>
         </TableColumn>
+        <TableColumn @bind-Field="@context.CreateUser">
+            <Template Context="vs">
+                <span>vs?.Value?.UserName</span>
+            </Template>
+        </TableColumn>
     </TableColumnsTemplate>
 </TablePageBase>
 
@@ -29,8 +34,14 @@
     protected async Task<QueryData<WorkerP>> OnQueryAsync(QueryPageOptions options)
     {
         RefAsync<int> totalcount = 0;
-        var res = await entityService.entityRepository.AsQueryable()
+
+        var p = options.SearchText;
+
+        var res = await entityService.entityRepository
+            .AsQueryable()
+            .WhereIF(!string.IsNullOrWhiteSpace(p), worker => worker.Name.Contains(p))
             .Includes(x => x.CreateUser)
+            .OrderByDescending(x => x.Id)
             .ToPageListAsync(options.PageIndex, options.PageItems, totalcount);
         var data = new QueryData<WorkerP>
         {

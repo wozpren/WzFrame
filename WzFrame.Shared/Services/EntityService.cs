@@ -56,7 +56,7 @@ namespace WzFrame.Shared.Services
         {
             if(entity is EntityUserBase userEntity)
             {
-                userEntity.CreateUser = webService.CurrentUser;
+                userEntity.CreateUserId = webService.CurrentUser?.Id;
             }
             else if(entity is EntityUserTimeBase entityBase)
             {
