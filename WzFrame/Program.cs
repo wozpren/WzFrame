@@ -28,6 +28,8 @@ using Fluxor;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddConfigs();
+builder.Services.AddSingleton<ConsoleServics>();
+
 builder.Configuration.AddToMasuitTools();
 
 // Add services to the container.
@@ -131,6 +133,8 @@ if(cors != null)
 
 
 var app = builder.Build();
+app.Services.GetRequiredService<ConsoleServics>();
+
 app.ConfigureApp();
 app.UseApplicationSetup();
 

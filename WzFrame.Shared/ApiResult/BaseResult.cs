@@ -35,7 +35,7 @@ namespace WzFrame.Shared.ApiResult
         }
     }
 
-    public record class Result<T>
+    public record class TResult<T>
     {
         /// <summary>
         /// Gets or sets a value indicating whether the action was successful.
@@ -52,7 +52,7 @@ namespace WzFrame.Shared.ApiResult
         /// </summary>
         public T? Data { get; set; }
 
-        public Result(T? data)
+        public TResult(T? data)
         {
             Succeeded = true;
             Data = data;

@@ -1,0 +1,25 @@
+﻿@page "/system/console"
+@attribute [MenuPageOption(107, "控制台", ParentId = 100, Icon = "fas fa-gear", Permission = "admin")]
+@inject ConsoleServics ConsoleServics;
+
+<div class="w-100 fh-100">
+    <p class="console-text" style="white-space: pre-wrap;word-wrap: break-word;">
+        @consoleText
+    </p>
+</div>
+
+
+@code {
+
+    private string consoleText = "";
+
+    protected override void OnInitialized()
+    {
+        consoleText = ConsoleServics.Get();
+    }
+
+
+
+
+
+}
