@@ -46,6 +46,13 @@ namespace WzFrame.Shared.Services
             return result;
         }
 
+
+        public async Task<List<TEntity>> GetAll()
+        {
+            return await entityRepository.GetListAsync();
+        }
+
+
         public async Task<TEntity> GetAsync(long id)
         {
             return await entityRepository.GetByIdAsync(id);
