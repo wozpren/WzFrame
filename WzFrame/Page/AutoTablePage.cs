@@ -1,4 +1,5 @@
 ﻿
+using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using System.Reflection;
@@ -19,30 +20,38 @@ namespace WzFrame.Page
             await base.OnInitializedAsync();
         }
 
+        protected override void OnAfterRender(bool firstRender)
+        {
+        }
+
+
+
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
+            if (MenuOptions != null)
+                MenuOption = MenuOptions.FirstOrDefault(x => x.Path == "/" + TabItem.Url);
             if (MenuOption != null)
             {
                 var AssemblyName = MenuOption.Assembly;
                 var fullName = MenuOption.ClassName;
                 if (Entity != null && AssemblyName != null && fullName != null)
                 {
-                    Type genericType = typeof(TablePageBase<>);
                     var typeAssembly = Assembly.Load(AssemblyName);
                     var type = typeAssembly.GetType(fullName);
                     if (type != null)
                     {
-                        Type constructedType = genericType.MakeGenericType(type);
-                        builder.OpenComponent(1, constructedType);
+                        
+                        builder.OpenComponent(1, typeof(TablePageBase<>).MakeGenericType(type));
                         builder.CloseComponent();
+
                         return;
                     }
                 }
             }
 
-            Build404(builder);
+            //Build404(builder);
         }
 
         protected virtual void Build404(RenderTreeBuilder builder)

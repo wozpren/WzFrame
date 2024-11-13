@@ -1,0 +1,60 @@
+﻿@using WzFrame.Entity.Work;
+@page "/workshop/worker"
+@inject EntityService<Worker> entityService
+@inject IJSRuntime JSRuntime;
+@inherits TabPageBase
+@attribute [MenuPageOption(203, "工人管理", Icon = "fas fa-person-digging", ParentId = 200, Permission = "admin,worker")]
+
+
+<TablePageBase
+    TItem="Worker" QueryAsync="OnQueryAsync" SaveAsync="OnSaveAsync">    
+    <RowButtonTemplate>
+        <TableCellButton Color="Color.Primary" Icon="fas fa-eye" Text="查看" OnClick="() =>Watch(context)" />
+    </RowButtonTemplate>
+    <TableColumnsTemplate>
+        <TableColumn @bind-Field="@context.CreateUser">
+            <Template Context="vs">
+                <span>@vs?.Value?.UserName</span>
+            </Template>
+        </TableColumn>
+    </TableColumnsTemplate>
+</TablePageBase>
+
+@code {
+
+    protected async Task<QueryData<Worker>> OnQueryAsync(QueryPageOptions options)
+    {
+        RefAsync<int> totalcount = 0;
+        var res = await entityService.entityRepository.AsQueryable()
+            .WhereIF(!string.IsNullOrWhiteSpace(User.Belong),
+                worker => worker.Belong == User.Belong)
+            .Includes(x => x.CreateUser)
+            .ToPageListAsync(options.PageIndex, options.PageItems, totalcount);
+        var data = new QueryData<Worker>
+        {
+            Items = res,               
+            TotalCount = totalcount
+        };
+
+        return data;
+    }
+
+    protected async Task<bool> OnSaveAsync(Worker t, ItemChangedType changedType)
+    {
+        switch (changedType)
+        {
+            default:
+            case ItemChangedType.Add:
+                t.Belong = User?.Belong ?? "";
+                return await entityService.AddAsync(t) > 0;
+            case ItemChangedType.Update:
+                t.Belong = User?.Belong ?? "";
+                return await entityService.entityRepository.UpdateAsync(t);
+        }
+    }
+
+    private async Task Watch(Worker worker)
+    {
+        await JSRuntime.InvokeVoidAsync("open", "http://hw.futaloli.com/index.html?id=" + worker.Id , "_blank");
+    }
+}

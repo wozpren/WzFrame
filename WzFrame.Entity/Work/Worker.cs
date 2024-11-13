@@ -7,56 +7,30 @@ using System.Threading.Tasks;
 
 namespace WzFrame.Entity.Work
 {
-    [SugarTable("Worker")]
+    [SugarTable("Worker", TableDescription = "工人表")]
     public class Worker : EntityUserTimeBase
     {
-        [AutoGenerateColumn(Text = "工人名称")]
-        [SugarColumn(ColumnDescription = "工人名称")]
-        public string? Name { get; set; }
+        [AutoGenerateColumn(Text = "姓名")]
+        public string Name { get; set; } = string.Empty;
 
-        [AutoGenerateColumn(Text = "工人身份证")]
-        [SugarColumn(ColumnDescription = "工人身份证", Length = 18)]
-        public string? IdCard { get; set; }
+        [AutoGenerateColumn(Text = "头像", Visible = false)]
+        public string Avatar { get; set; } = string.Empty;
 
-        [AutoGenerateColumn(Text = "工人照片")]
-        [SugarColumn(ColumnDescription = "工人照片")]
-        public string? Photo { get; set; }
+        [AutoGenerateColumn(Text = "身份证号")]
+        public string Identity { get; set; } = string.Empty;
+        [AutoGenerateColumn(Text = "操作机型")]
+        public string Machine { get; set; } = string.Empty;
 
-        [AutoGenerateColumn(Text = "工人电话")]
-        [SugarColumn(ColumnDescription = "工人电话", Length = 11)]
-        public string? Phone { get; set; }
+        [AutoGenerateColumn(Text = "指导员")]
+        public string Trainee { get; set; } = string.Empty;
 
-        [AutoGenerateColumn(Text = "培训公司")]
-        [SugarColumn(ColumnDescription = "培训公司")]
-        public string? TrainingCompany { get; set; }
-
-        [AutoGenerateColumn(Text = "培训师")]
-        [SugarColumn(ColumnDescription = "培训师")]
-        public string? TrainingTeacher { get; set; }
-
-        [AutoGenerateColumn(Text = "培训签名")]
-        [SugarColumn(ColumnDescription = "培训签名")]
-        public string? TrainingName { get; set; }
-
-        [AutoGenerateColumn(Text = "培训内容")]
-        [SugarColumn(ColumnDescription = "培训内容")]
-        public string? TrainingContent { get; set; }
-
-
-        [AutoGenerateColumn(Text = "证书编号")]
-        [SugarColumn(ColumnDescription = "证书编号")]
-        public string? CertificateNo { get; set; }
-
-
-        [AutoGenerateColumn(Text = "颁证日期")]
-        [SugarColumn(ColumnDescription = "颁证日期")]
-        public DateTime CertificateDate { get; set; }
+        [AutoGenerateColumn(Text = "培训时间")]
+        public DateTime TrainTime { get; set; } = DateTime.Now;
 
         [AutoGenerateColumn(Text = "有效时间")]
-        [SugarColumn(ColumnDescription = "有效日期")]
-        public DateTime ValidDate { get; set; }
+        public DateTime ValidTime { get; set; } = DateTime.Now;
 
         [AutoGenerateColumn(Text = "所属", Ignore = true)]
-        public string? Belong { get; set; } = string.Empty;
+        public string Belong { get; set; } = string.Empty;
     }
 }
