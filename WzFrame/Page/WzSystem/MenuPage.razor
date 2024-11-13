@@ -161,11 +161,6 @@
         if (menu.Path != null)
         {
             menu.Path = menu.Path.Trim();
-
-            if (menu.Path.StartsWith("/"))
-            {
-                menu.Path = menu.Path.Substring(1);
-            }
         }
         if (type == ItemChangedType.Add)
             await MenuService.AddAsync(menu);
