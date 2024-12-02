@@ -1,0 +1,70 @@
+﻿.bc{
+    background-color: gray;
+}
+
+.dlayout {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 16px;
+    gap: 135px;
+    justify-content: space-around;
+}
+
+.desktop{
+    padding: 32px;
+    position: relative;
+}
+
+    .desktop .north {
+        position: absolute;
+        top: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .desktop .east {
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+    }
+
+    .desktop .south {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .desktop .west {
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        transform: translateY(-50%);
+    }
+
+.index {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    color: white;
+}
+
+.icon {
+    width: 80px;
+}
+
+
+.back-img {
+    position:fixed;
+    width:100vw;
+    height: 100vh;
+}
+
+.line p{
+    display: inline;
+    width:fit-content;
+    padding: 10px;
+}

@@ -43,6 +43,11 @@ namespace WzFrame.Shared.Hubs
             return Clients.User(Id).SendAsync("ReceiveNotification", onlineNotification);
         }
 
+        public Task Update()
+        {
+            return Clients.All.SendAsync("Update");
+        }
+
 
 
 

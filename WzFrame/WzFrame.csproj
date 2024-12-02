@@ -19,17 +19,34 @@
     <None Remove="Page\Article\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="C:\Users\asq99\.nuget\packages\aspnetcore.sasscompiler\1.80.6\build\..\runtimes\linux-arm64\src\dart" />
+    <None Remove="C:\Users\asq99\.nuget\packages\aspnetcore.sasscompiler\1.80.6\build\..\runtimes\linux-arm64\src\sass.snapshot" />
+    <None Remove="C:\Users\asq99\.nuget\packages\aspnetcore.sasscompiler\1.80.6\build\..\runtimes\linux-x64\src\dart" />
+    <None Remove="C:\Users\asq99\.nuget\packages\aspnetcore.sasscompiler\1.80.6\build\..\runtimes\linux-x64\src\sass.snapshot" />
+    <None Remove="C:\Users\asq99\.nuget\packages\aspnetcore.sasscompiler\1.80.6\build\..\runtimes\osx-arm64\src\dart" />
+    <None Remove="C:\Users\asq99\.nuget\packages\aspnetcore.sasscompiler\1.80.6\build\..\runtimes\osx-arm64\src\sass.snapshot" />
+    <None Remove="C:\Users\asq99\.nuget\packages\aspnetcore.sasscompiler\1.80.6\build\..\runtimes\osx-x64\src\dart" />
+    <None Remove="C:\Users\asq99\.nuget\packages\aspnetcore.sasscompiler\1.80.6\build\..\runtimes\osx-x64\src\sass.snapshot" />
+    <None Remove="C:\Users\asq99\.nuget\packages\aspnetcore.sasscompiler\1.80.6\build\..\runtimes\win-x64\src\dart.exe" />
+    <None Remove="C:\Users\asq99\.nuget\packages\aspnetcore.sasscompiler\1.80.6\build\..\runtimes\win-x64\src\sass.snapshot" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.SassCompiler" Version="1.80.6" />
     <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
     <PackageReference Include="BootstrapBlazor.FontAwesome" Version="8.0.2" />
     <PackageReference Include="Fluxor.Blazor.Web" Version="6.0.0" />
-    <PackageReference Include="log4net" Version="2.0.17" />
+    <PackageReference Include="Lazy.Captcha.Core" Version="2.0.9" />
+    <PackageReference Include="log4net" Version="3.0.3" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Masuit.Tools.AspNetCore" Version="2024.4.2" />
     <PackageReference Include="Masuit.Tools.Core" Version="2024.4.2" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
     <PackageReference Include="OnceMi.AspNetCore.OSS" Version="1.2.0" />
-    <PackageReference Include="Quartz" Version="3.8.1" />
-    <PackageReference Include="Quartz.AspNetCore" Version="3.8.1" />
+    <PackageReference Include="Quartz" Version="3.13.1" />
+    <PackageReference Include="Quartz.AspNetCore" Version="3.13.1" />
+    <PackageReference Include="Senparc.Weixin.AspNet" Version="1.4.6" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.22.0" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.170" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
   </ItemGroup>

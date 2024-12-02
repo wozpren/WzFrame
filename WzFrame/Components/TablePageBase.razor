@@ -4,7 +4,7 @@
 @inject EntityService<TItem> entityService
 @attribute [CascadingTypeParameter(nameof(TItem))]
 
-<Table TItem="TItem" AutoGenerateColumns="true" class="table-demo"
+<Table TItem="TItem" AutoGenerateColumns="@AutoGenerateColumns" class="table-demo"
        IsPagination="true" PageItemsSource="PageItemsSource"
        IsBordered="true" IsMultipleSelect="true" 
        FixedExtendButtonsColumn="@FixedExtendButtonsColumn"       
@@ -27,6 +27,8 @@
     [Parameter]
     public bool FixedExtendButtonsColumn { get; set; }
 
+    [Parameter]
+    public bool AutoGenerateColumns { get; set; } = true;
 
     [Parameter]
     public Func<QueryPageOptions, Task<QueryData<TItem>>>? QueryAsync { get; set; }

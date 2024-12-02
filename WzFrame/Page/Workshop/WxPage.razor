@@ -1,0 +1,23 @@
+﻿@page "/workshop/wx"
+@using WzFrame.Entity.Workshop
+
+@inherits TabPageBase
+@attribute [MenuPageOption(210, "微信管理", Icon = "fas fa-computer", ParentId = 200, Permission = "admin")]
+
+
+<TablePageBase TItem="WxUser" AutoGenerateColumns="false">
+    <TableColumnsTemplate>
+        <TableColumn @bind-Field="@context.NickName" Text="昵称" />
+        <TableColumn @bind-Field="@context.AvatarUrl" Text="头像">
+            <Template Context="avatar">
+                <img class="icon" src="@("data:image/jpg;base64," + avatar.Value)" />
+            </Template>
+        </TableColumn>
+        <TableColumn @bind-Field="@context.TotalScore" Text="总积分" />
+    </TableColumnsTemplate>
+</TablePageBase>
+
+
+@code {
+
+}
