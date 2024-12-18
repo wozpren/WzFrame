@@ -45,12 +45,16 @@ namespace WzFrame.Services
 
         public async ValueTask<List<MenuOption>> GetMenuOptions(AuthenticationState? state)
         {
+            if(state == null)
+            {
+                return MenuOptions ?? new List<MenuOption>();
+            }
             if (MenuOptions == null)
             {
                 MenuOptionsTree = await menuService.GetTree(state);
                 SetMenuOptions(MenuOptionsTree);
             }
-            return MenuOptions;
+            return MenuOptions ?? new List<MenuOption>();
         }
 
         public async ValueTask<List<MenuItem>> GetMenuItems(AuthenticationState? state)

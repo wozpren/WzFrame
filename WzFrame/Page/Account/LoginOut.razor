@@ -6,16 +6,12 @@
 @layout UnauthorizedLayout
 @inject IdentityRedirectManager RedirectManager
 
-退出
+
 
 @code {
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
-    protected override void OnParametersSet()
-    {
-
-    }
 
     protected override async Task OnInitializedAsync()
     {

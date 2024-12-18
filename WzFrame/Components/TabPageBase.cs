@@ -5,6 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using WzFrame.Entity.DTO;
 using WzFrame.Entity.System;
+using WzFrame.Services;
+using WzFrame.Shared.Extensions;
 namespace WzFrame.Components
 {
 
@@ -18,7 +20,10 @@ namespace WzFrame.Components
         [NotNull]
         public TabItem TabItem { get; set; }
 
-        [CascadingParameter]
+        [Inject]
+        [NotNull]
+        protected BlazorService BlazorService { get; set; }
+
         protected List<MenuOption>? MenuOptions { get; set; }
 
         [CascadingParameter]
@@ -28,26 +33,38 @@ namespace WzFrame.Components
 
         protected AuthenticationState? CurrentUser { get; set; }
 
-        protected override void OnParametersSet()
-        {
-            if (MenuOptions != null)
-            {
-                MenuOption = MenuOptions.FirstOrDefault(x => x.Path == "/" + TabItem.Url);
-                if (MenuOption != null)
-                    TabItem.SetHeader(MenuOption.Name, MenuOption.Icon);
-            }
-        }
         protected override async Task OnParametersSetAsync()
         {
-            if (StateProvider != null && MenuOption != null)
+            if (StateProvider != null)
             {
                 CurrentUser = await StateProvider.GetAuthenticationStateAsync();
-                if (!CheckPermission(CurrentUser.User, MenuOption.Permission))
+
+                if (CurrentUser == null) return;
+
+                if (MenuOptions == null)
+                    MenuOptions = await BlazorService.GetMenuOptions(CurrentUser);
+
+                MenuOption = MenuOptions.FirstOrDefault(x => x.Path == "/" + TabItem.Url);
+
+                if (MenuOption != null)
+                {
+                    TabItem.SetHeader(MenuOption.Name, MenuOption.Icon);
+                    if (!CheckPermission(CurrentUser.User, MenuOption.Permission))
+                    {
+                        NavigationManager.NavigateTo("/");
+                    }
+                }
+                else
                 {
                     NavigationManager.NavigateTo("/");
                 }
             }
+            else 
+            {
+                NavigationManager.NavigateTo("/");
+            }
         }
+
         protected bool CheckPermission(ClaimsPrincipal user, List<string>? permission)
         {
             if (permission == null || permission.Count == 0)

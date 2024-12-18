@@ -24,6 +24,9 @@ using Microsoft.AspNetCore.SignalR;
 using OnceMi.AspNetCore.OSS;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Fluxor;
+using Senparc.Weixin.RegisterServices;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.Weixin.AspNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,6 +89,7 @@ builder.Services.AddScoped(typeof(EntityRepository<>));
 builder.Services.AddScoped(typeof(EntityService<>));
 
 
+
 builder.Services.AddCaptcha(builder.Configuration);
 
 builder.Services.AddQuartz();
@@ -106,16 +110,14 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new() { Title = "WzFrame", Version = "v1" });
 });
 
-builder.Services.AddHttpClient("eshop", p =>
-{
-    p.BaseAddress = new Uri("http://wwww.553vip.com");
-});
 
 builder.Services.AddOSSService("OSSProvider");
 builder.Services.AddFluxor(options =>
 {
     options.ScanAssemblies(typeof(Program).Assembly);
 });
+builder.Services.AddSenparcWeixinServices(builder.Configuration);
+
 
 var cors = builder.Configuration.GetSection("CorsPolicy").Get<CorsPolicy>();
 if(cors != null)
@@ -131,9 +133,17 @@ if(cors != null)
     });
 }
 
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<BlazorHub>();
+builder.Services.AddSingleton<WxService>();
 
 var app = builder.Build();
+
+app.UseSenparcWeixin(app.Environment, null, null, r => { },(r,w) => { });
+
 app.Services.GetRequiredService<ConsoleServics>();
+
+
 
 app.ConfigureApp();
 app.UseApplicationSetup();
@@ -157,6 +167,7 @@ else
     });
 }
 
+app.UseStatusCodePagesWithRedirects("/StatusCode/{0}");
 
 //app.UseHttpsRedirection();
 app.UseCors();
