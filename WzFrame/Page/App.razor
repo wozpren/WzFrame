@@ -19,6 +19,13 @@
     <Script Src="js/tool.js" ></Script>
     <Script Src="_content/BootstrapBlazor/js/bootstrap.blazor.bundle.min.js"></Script>
     <script src="_framework/blazor.web.js"></script>
+    <script>
+        window.addBeforeUnloadListener = function (dotNetObject) {
+            window.addEventListener('beforeunload', function (event) {
+                dotNetObject.invokeMethodAsync('OnBeforeUnload');
+            });
+        };
+    </script>
 </body>
 
 </html>

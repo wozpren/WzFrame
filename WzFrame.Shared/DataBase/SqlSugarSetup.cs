@@ -20,6 +20,7 @@ using WzFrame.Entity.Consts;
 using WzFrame.Entity.System;
 using WzFrame.Entity.Users;
 using WzFrame.Shared.Extensions;
+using WzFrame.Shared.Services;
 using Yitter.IdGenerator;
 
 namespace WzFrame.Shared.DataBase;
@@ -50,6 +51,7 @@ public static class SqlSugarSetup
         builder.Services.AddHttpContextAccessor();
         //builder.Services.AddSingleton<ISqlSugarClient>(sqlSugar);
         builder.Services.AddSingleton(sqlSugar);
+        builder.Services.AddScoped(typeof(BootstrapBlazor.Components.IDataService<>), typeof(EntityService<>));
 
         foreach (var dbConfig in db.ConnectionConfigs)
         {

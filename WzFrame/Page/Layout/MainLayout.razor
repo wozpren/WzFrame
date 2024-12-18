@@ -3,6 +3,8 @@
 @using WzFrame.Entity.System
 @using WzFrame.Entity.DTO
 @inherits LayoutComponentBase
+@implements IAsyncDisposable
+
 @inject BlazorService blazorService
 @inject UserService UserService
 @inject AuthenticationStateProvider StateProvider
@@ -10,15 +12,16 @@
 @inject ToastService ToastService
 @inject HubService HubService
 @inject WebService WebService
+@inject IJSRuntime JSRuntime
 
 <BootstrapBlazorRoot>
-<CascadingValue Value="MenuOptions">
+    <CascadingValue Value="MenuOptions">
         <CascadingValue Value="User">
             <div class="main-layout">
                 <Layout ShowGotoTop="true" ShowCollapseBar="true" SideWidth="0"
-                        IsPage="true" IsFullSide="@false" IsFixedHeader="@true"
-                        TabDefaultUrl="/" UseTabSet="@true" IsOnlyRenderActiveTab="@true"
-                        Menus="@Menus">
+                IsPage="true" IsFullSide="@false" IsFixedHeader="@true"
+                TabDefaultUrl="/" UseTabSet="@true" IsOnlyRenderActiveTab="@true"
+                Menus="@Menus">
                     <Header>
                         <div class="header-bar">
                             <SlideButton style="height:auto;" Placement="Placement.BottomEnd" ShowHeader="false">
@@ -80,6 +83,9 @@
             MenuOptions = await blazorService.GetMenuOptions(state);
             StateHasChanged();
         }
+
+        await JSRuntime.InvokeVoidAsync("addBeforeUnloadListener", DotNetObjectReference.Create(this));
+
     }
 
     protected async Task<bool> CheckSecurityStamp()
@@ -110,13 +116,14 @@
         clientConnection.On<OnlineNotification>("ReceiveNotification", ReceiveNotification);
         clientConnection.On("Refresh", Refresh);
 
+
         await clientConnection.StartAsync();
     }
 
     public void SetConnectUser()
     {
         if (clientConnection != null && clientConnection.State == HubConnectionState.Connected && state != null)
-            HubService.ConnectUser.TryAdd(clientConnection.ConnectionId!, state.User);
+            HubService.AddConnectUser(clientConnection.ConnectionId!, state.User);
     }
 
     public void OnLogout()
@@ -141,6 +148,22 @@
 
     }
 
+    [JSInvokable]
+    public async Task OnBeforeUnload()
+    {
+        if (clientConnection != null)
+        {
+            await clientConnection.StopAsync();
+            await clientConnection.DisposeAsync();
+        }
+    }
 
-
+    public async ValueTask DisposeAsync()
+    {
+        if (clientConnection != null)
+        {
+            await clientConnection.StopAsync();
+            await clientConnection.DisposeAsync();
+        }
+    }
 }

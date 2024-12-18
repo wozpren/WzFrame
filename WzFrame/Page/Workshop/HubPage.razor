@@ -1,0 +1,24 @@
+﻿@page "/workshop/hub"
+@using WzFrame.Shared.Hubs
+
+
+@inherits TabPageBase
+@attribute [MenuPageOption(211, "Hub管理", Icon = "fas fa-computer", ParentId = 200, Permission = "admin")]
+@inject BlazorHub BlazorHub
+
+<Table TItem="HubUser" 
+    AutoGenerateColumns ShowToolbar ShowExtendButtons ShowSearchButton ShowSearch>
+
+
+</Table>
+
+
+@code {
+
+
+    public void Run(string id)
+    {
+
+    }
+
+}

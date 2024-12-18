@@ -14,11 +14,16 @@ namespace WzFrame.Shared.Services
     [ServiceInject(ServiceLifetime.Singleton)]
     public class HubService
     {
-        public ConcurrentDictionary<string, ClaimsPrincipal> ConnectUser { get; set; } = new ConcurrentDictionary<string, ClaimsPrincipal>();
+        public ConcurrentDictionary<string, ClaimsPrincipal?> ConnectUser { get; set; } = new ConcurrentDictionary<string, ClaimsPrincipal?>();
 
         public void AddConnectUser(string userIdentifier, ClaimsPrincipal user)
         {
             ConnectUser.TryAdd(userIdentifier, user);
+        }
+
+        public void RemoveConnect(string userId)
+        {
+            ConnectUser.Remove(userId, out _);
         }
 
 

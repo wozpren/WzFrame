@@ -15,7 +15,7 @@ using WzFrame.Shared.Repository;
 
 namespace WzFrame.Shared.Services
 {
-    public class EntityService<TEntity> where TEntity : class, IEntityBase, new()
+    public class EntityService<TEntity> : IDataService<TEntity> where TEntity : class, IEntityBase, new()
     {
 
         public readonly EntityRepository<TEntity> entityRepository;
@@ -35,6 +35,7 @@ namespace WzFrame.Shared.Services
             var data = await entityRepository.AsQueryable()
                 .OrderByDescending(te => te.Id)
                 .ToPageListAsync(queryPageOptions.PageIndex, queryPageOptions.PageItems, totalcount);
+
             var result = new QueryData<TEntity>()
             {
                 Items = data,
@@ -96,5 +97,29 @@ namespace WzFrame.Shared.Services
             return await entityRepository.DeleteAsync(entitys.ToList());
         }
 
+        async Task<bool> IDataService<TEntity>.AddAsync(TEntity model)
+        {
+            var res = await AddAsync(model);
+            return res > 0;
+        }
+
+        public async Task<bool> SaveAsync(TEntity model, ItemChangedType changedType)
+        {
+            if (changedType == ItemChangedType.Add)
+            {
+                return await AddAsync(model) > 0;
+            }
+            else if (changedType == ItemChangedType.Update)
+            {
+                return await UpdateAsync(model);
+            }
+
+            return true;
+        }
+
+        public Task<bool> DeleteAsync(IEnumerable<TEntity> models)
+        {
+            return DeletesAsync(models);
+        }
     }
 }

@@ -135,7 +135,6 @@ if(cors != null)
 
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<BlazorHub>();
-builder.Services.AddSingleton<WxService>();
 
 var app = builder.Build();
 
