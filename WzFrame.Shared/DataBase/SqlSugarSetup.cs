@@ -157,11 +157,50 @@ public static class SqlSugarSetup
     {
         if (opt.InitMenu)
         {
-            InitMenuFormPage(db);        
+            InitMenuFormPage(db);
+
+            var roleList = new List<Role>
+            {
+                new Role
+                {
+                    Id = 139132739219525,
+                    Name = "admin",
+                    DisplayName = "超级管理员",
+                    NormalizedName = "超级管理员",
+                    ConcurrencyStamp = Guid.NewGuid().ToString(),                   
+                }
+            };
+
+            var userList = new List<ApplicationUser>
+            {
+                new ApplicationUser
+                {
+                    Id = 539132739219525,
+                    UserName = "wozpren",
+                    NormalizedUserName = "WOZPREN",
+                    Description = "超级管理员",
+                    EmailConfirmed = true,
+                    PasswordHash = "AQAAAAIAAYagAAAAEFJMSDfHCioZPFHTyjvXgGZs/6Mg+DpW+jP0OVJNylEIbTrYKbCyB/iOB4U37J1f6Q==",
+                    SecurityStamp = "VKLACJJM6SJACUYIVPLZXANHSXOUT5EK",
+                }
+            };
+
+            var userRoles = new List<IdentityUserRole>
+            {
+                new IdentityUserRole
+                {
+                    RoleId = 139132739219525,
+                    UserId = 539132739219525,
+                }
+            };
+
+
+            db.Storageable(roleList).ExecuteCommandAsync();
+            db.Storageable(userList).ExecuteCommandAsync();
+            db.Storageable(userRoles).ExecuteCommandAsync();
         }
 
-        //db.Storageable(roleList).ExecuteCommandAsync();
-        //db.Storageable(userList).ExecuteCommandAsync();
+
 
 
 

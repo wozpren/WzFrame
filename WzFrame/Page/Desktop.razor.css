@@ -2,18 +2,24 @@
     background-color: gray;
 }
 
+
+
 .dlayout {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 16px;
-    gap: 135px;
-    justify-content: space-around;
+    display: grid;
+    padding: 48px;
+    gap: 32px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
-.desktop{
+.desktop {
     padding: 32px;
     position: relative;
+    aspect-ratio: 1/1;
 }
+    .desktop .desk {
+        width: 100%;
+        padding: 32px;
+    }
 
     .desktop .north {
         position: absolute;
@@ -58,13 +64,14 @@
 
 
 .back-img {
-    position:fixed;
-    width:100vw;
-    height: 100vh;
+    width:14vw;
+    position: absolute;
+    left: calc(50% - 7vw);
 }
 
 .line p{
     display: inline;
     width:fit-content;
     padding: 10px;
+    font-size: 1.5rem;
 }

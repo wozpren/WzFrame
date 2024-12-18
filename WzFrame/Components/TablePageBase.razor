@@ -53,7 +53,7 @@
             return await entityService.QueryAsync(options);
     }
 
-    protected async Task<bool> OnSaveAsync(TItem t, ItemChangedType changedType)
+    public async Task<bool> OnSaveAsync(TItem t, ItemChangedType changedType)
     {
         if (SaveAsync != null)
         {

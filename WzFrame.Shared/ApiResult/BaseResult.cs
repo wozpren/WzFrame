@@ -70,6 +70,7 @@ namespace WzFrame.Shared.ApiResult
         /// </summary>
         public string[] ErrorList { get; set; } = [];
 
+
         public object? Data { get; set; }
 
         public JResult(object? data)

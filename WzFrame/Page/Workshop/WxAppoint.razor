@@ -1,0 +1,31 @@
+﻿@using WzFrame.Entity.Workshop
+@inherits TabPageBase
+@inject EntityService<Appointment> entityService
+
+
+<TablePageBase TItem="Appointment" QueryAsync="OnQueryAsync">
+    <TableColumnsTemplate>
+        <TableColumn @bind-Field="@context.State" Text="状态">
+            <Template Context="state">
+                <p>@(state.Value == 1? "已签到": "未签到")</p>
+            </Template>
+        </TableColumn>
+    </TableColumnsTemplate>
+</TablePageBase>
+
+
+
+@code {
+
+
+
+    protected async Task<QueryData<Appointment>> OnQueryAsync(QueryPageOptions options)
+    {
+        var list = await entityService.QueryAsync(options);
+        if (list.Items != null)
+            list.Items = list.Items.OrderBy(x => x.State).ToList();
+
+        return list;
+    }
+
+}

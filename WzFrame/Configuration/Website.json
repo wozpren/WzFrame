@@ -5,5 +5,7 @@
   "SupportFindPassword": false,
   "SiteName": "WzFrame",
   "SiteDescription": "个人开发Blazor框架",
-  "DefaultPassword": "123456"
+  "DefaultPassword": "123456",
+  "OrderList": [ 40, 40, 10, 10, 10, 10, 10 ],
+  "BattleMsg": "暂无"
 }

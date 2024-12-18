@@ -8,45 +8,49 @@
 @inject NavigationManager NavigationManager
 @inject EntityService<WxUser> UserService
 
-<img src="/deskback.png" class="back-img" alt="背景" />
-<div style="position:relative;padding: 30px 60px;">
-    <Button OnClick="Total">总排名</Button>
+<div style="background-color: #cc3333;min-height:100vh;">
+    <p style="    font-size: 7rem;
+    color: white;
+    position: absolute;
+    left: 37%;
+    top: 5px;
+}">掼乐蛋</p>
+
+    @if (DeskInfos is not null)
+    {
+        <div class="dlayout">
+            @foreach ((int i, DeskInfo deskInfo) in DeskInfos.Index())
+            {
+                @if (deskInfo != null)
+                {
+                    <div class="desktop">
+                        <img class="desk" src="/desktop.png" />
+                        <div class="north" @onclick="()=> Down(i, 0)">
+                            <img class="icon" src="@deskInfo.User1.AvatarUrl" />
+                            <p>@deskInfo.User1.NickName</p>
+                        </div>
+                        <div class="east" @onclick="()=> Down(i, 1)">
+                            <img class="icon" src="@deskInfo.User2.AvatarUrl" />
+                            <p>@deskInfo.User2.NickName</p>
+                        </div>
+                        <div class="south" @onclick="()=> Down(i, 2)">
+                            <img class="icon" src="@deskInfo.User3.AvatarUrl" />
+                            <p>@deskInfo.User3.NickName</p>
+                        </div>
+                        <div class="west" @onclick="()=> Down(i, 3)">
+                            <img class="icon" src="@deskInfo.User4.AvatarUrl" />
+                            <p>@deskInfo.User4.NickName</p>
+                        </div>
+                        <p class="index">第@(i + 1)桌</p>
+                    </div>
+                }
+
+            }
+        </div>
+
+    }
 </div>
 
-
-@if (DeskInfos is not null)
-{
-    <div class="dlayout">
-        @foreach ((int i, DeskInfo deskInfo) in DeskInfos.Index())
-        {
-            @if (deskInfo != null)
-            {
-                <div class="desktop">
-                    <img class="desk" src="/desktop.png" />
-                    <div class="north" @onclick="()=> Down(i, 0)">
-                        <img class="icon" src="@deskInfo.User1.AvatarUrl" />
-                        <p>@deskInfo.User1.NickName</p>
-                    </div>
-                    <div class="east" @onclick="()=> Down(i, 1)">
-                        <img class="icon" src="@deskInfo.User2.AvatarUrl" />
-                        <p>@deskInfo.User2.NickName</p>
-                    </div>
-                    <div class="south" @onclick="()=> Down(i, 2)">
-                        <img class="icon" src="@deskInfo.User3.AvatarUrl" />
-                        <p>@deskInfo.User3.NickName</p>
-                    </div>
-                    <div class="west" @onclick="()=> Down(i, 3)">
-                        <img class="icon" src="@deskInfo.User4.AvatarUrl" />
-                        <p>@deskInfo.User4.NickName</p>
-                    </div>
-                    <p class="index">第@(i + 1)桌</p>
-                </div>
-            }
-
-        }
-    </div>
-
-}
 
 <Modal @ref="BackdropModal" IsBackdrop="true">
     <ModalDialog Title="@Title" Size="Size.Small">

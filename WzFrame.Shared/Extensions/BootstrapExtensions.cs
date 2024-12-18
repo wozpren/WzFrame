@@ -37,7 +37,17 @@ namespace WzFrame.Shared.Extensions
             return null;
         }
 
-
-
+        public static bool IncludeRole(this ClaimsPrincipal user, List<string> permission)
+        {
+            if (user?.Identity?.IsAuthenticated ?? false)
+            {
+                var roles = user.Claims
+                    .Where(x => x.Type == ClaimTypes.Role)
+                    .Select(i => i.Value)
+                    .ToList();
+                return permission.Contains(roles);
+            }
+            return false;
+        }
     }
 }

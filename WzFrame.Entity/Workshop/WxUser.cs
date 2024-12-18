@@ -11,6 +11,7 @@ namespace WzFrame.Entity.Workshop
     {
         public string OpenId { get; set; } = string.Empty;
         public string NickName { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
 
         [SugarColumn(ColumnDataType = "BLOB")]
         public byte[]? Avatar { get; set; }
@@ -28,7 +29,16 @@ namespace WzFrame.Entity.Workshop
             }
             set
             {
-                Avatar = Convert.FromBase64String(value);
+                if(value.StartsWith("data:image/jpg;base64,"))
+                {
+                    var base64 = value.Substring("data:image/jpg;base64,".Length);
+                    Avatar = Convert.FromBase64String(base64);
+                }
+                else
+                {
+                    Avatar = Convert.FromBase64String(value);
+
+                }
             }
         }
     }
@@ -38,7 +48,14 @@ namespace WzFrame.Entity.Workshop
     {
         public string Name { get; set; } = string.Empty;
         public string Avatar { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
         public string Code { get; set; } = string.Empty;
 
+    }
+
+    public class MWxUser
+    {
+        public string NickName { get; set; } = string.Empty;
+        public int Score { get; set; }
     }
 }

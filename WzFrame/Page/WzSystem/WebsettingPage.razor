@@ -1,4 +1,5 @@
 ﻿@page "/system/websetting"
+@using Masuit.Tools;
 @inherits TabPageBase
 @attribute [MenuPageOption(106, "网站设定", ParentId = 100, Icon = "fas fa-gear", Permission = "admin")]
 @inject ToastService ToastService
@@ -13,6 +14,21 @@
                     </div>
                 </EditTemplate>
             </EditorItem>
+            <EditorItem @bind-Field="@context.OrderList">
+                <EditTemplate Context="value">
+                    <div class="col-4">
+                        <BootstrapInput @bind-Value="OrderList" />
+                    </div>
+                </EditTemplate>
+            </EditorItem>
+            <EditorItem @bind-Field="@context.BattleMsg">
+                <EditTemplate Context="value">
+                    <div class="col-12">
+                        <Textarea DisplayText="赛事咨询" @bind-Value="value.BattleMsg" />
+                    </div>
+                </EditTemplate>
+            </EditorItem>
+
         </FieldItems>
         <Buttons>
             <Button ButtonType="ButtonType.Submit" Icon="fa-solid fa-floppy-disk" Text="保存" OnClick="SaveBaseSetting" />
@@ -20,19 +36,25 @@
         </Buttons>
     </EditorForm>
 </GroupBox>
-<Link></Link>
+
+
 @code {
     private WebsiteConfig baseConfig;
+
+    private string? OrderList;
 
     protected override void OnInitialized()
     {
         baseConfig = AppSettings.Get<WebsiteConfig>();
+        OrderList = baseConfig.OrderList.ToJsonString();
 
     }
 
 
     public async Task SaveBaseSetting()
     {
+        var list = OrderList.FromJson<int[]>();
+        baseConfig.OrderList = list;
         await AppSettings.SaveConfigAsync<WebsiteConfig>();
         await ToastService.Success("保存成功");
     }

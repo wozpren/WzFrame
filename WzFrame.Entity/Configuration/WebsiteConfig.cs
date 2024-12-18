@@ -18,6 +18,9 @@ namespace WzFrame.Entity.Configuration
         public string SiteDescription { get; set; } = "个人开发Blazor框架";
         public string DefaultPassword { get; set; } = "123456";
 
+        public int[] OrderList { get; set; } = new int[] { 40, 40, 10, 10, 10, 10, 10 };
+
+        public string BattleMsg { get; set; } = string.Empty;
 
 
     }

@@ -89,6 +89,7 @@ builder.Services.AddScoped(typeof(EntityRepository<>));
 builder.Services.AddScoped(typeof(EntityService<>));
 
 
+
 builder.Services.AddCaptcha(builder.Configuration);
 
 builder.Services.AddQuartz();
@@ -134,7 +135,7 @@ if(cors != null)
 
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<BlazorHub>();
-
+builder.Services.AddSingleton<WxService>();
 
 var app = builder.Build();
 
@@ -166,6 +167,7 @@ else
     });
 }
 
+app.UseStatusCodePagesWithRedirects("/StatusCode/{0}");
 
 //app.UseHttpsRedirection();
 app.UseCors();

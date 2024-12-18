@@ -1,23 +1,139 @@
 ﻿@page "/workshop/wx"
+@using QRCoder
 @using WzFrame.Entity.Workshop
 
 @inherits TabPageBase
 @attribute [MenuPageOption(210, "微信管理", Icon = "fas fa-computer", ParentId = 200, Permission = "admin")]
 
+@inject WxService wxService
+@inject DownloadService downloadService
+@inject MessageService MessageService
+<div class="mb-2">
+    <BootstrapInput @bind-Value="DesktopCount" Color="Color.Primary" />
+</div>
+<div class="row mb-2">
+    <div class="col-5">
+        <BootstrapInputGroup>
+            <BootstrapInputGroupLabel DisplayText="桌号" />
+            <BootstrapInput @bind-Value="@desktopId" />
+        </BootstrapInputGroup>
+    </div>
+    <div class="col-4">
+        <BootstrapInputGroup>
+            <BootstrapInputGroupLabel DisplayText="桌位(1-4)" />
+            <BootstrapInput @bind-Value="@deskIndex" />
+        </BootstrapInputGroup>
+    </div>
+    <div class="col-3">
+        <Button Color="Color.Primary" OnClick="() => AddSocre(100)">+100</Button>
+        <Button Color="Color.Primary" OnClick="() => AddSocre(-100)">-100</Button>
+        <Button Color="Color.Primary" OnClick="GQrCode">生成二维码</Button>
+    </div>
 
-<TablePageBase TItem="WxUser" AutoGenerateColumns="false">
+</div>
+
+<TablePageBase @ref="tablePage" TItem="WxUser" AutoGenerateColumns="false">
+    <RowButtonTemplate>
+        <TableCellButton Text="+ 100" OnClick="() => AddSocre(context, 100)" />
+        <TableCellButton Text="- 100" OnClick="() => AddSocre(context, -100)" />
+    </RowButtonTemplate>
     <TableColumnsTemplate>
         <TableColumn @bind-Field="@context.NickName" Text="昵称" />
         <TableColumn @bind-Field="@context.AvatarUrl" Text="头像">
             <Template Context="avatar">
-                <img class="icon" src="@("data:image/jpg;base64," + avatar.Value)" />
+                <img class="icon" src="@avatar.Value" />
             </Template>
         </TableColumn>
         <TableColumn @bind-Field="@context.TotalScore" Text="总积分" />
     </TableColumnsTemplate>
 </TablePageBase>
 
-
 @code {
+    private TablePageBase<WxUser> tablePage;
 
+    private int DesktopCount
+    {
+        get => desktopCount;
+        set
+        {
+            desktopCount = value;
+            wxService.DesktopCount = value;
+        }
+    }
+
+    private int desktopCount;
+
+    private int desktopId;
+    private int deskIndex;
+
+
+    protected override void OnInitialized()
+    {
+        DesktopCount = wxService.DesktopCount;
+    }
+
+    private async Task AddSocre(int score)
+    {
+        var did = desktopId - 1;
+        var didx = deskIndex - 1;
+        try
+        {
+            var user = wxService.FindUserById(did, didx);
+            if (user == null)
+            {
+                await MessageService.Show(new MessageOption()
+                    {
+                        Content = "改位置无用户",
+                        Color = Color.Danger
+                    });
+            }
+            else
+            {
+                await AddSocre(user, score);
+                await MessageService.Show(new MessageOption()
+                    {
+                        Content = $"用户【{user.NickName}】积分变更{score}",
+                    });
+            }
+        }
+        catch(ArgumentOutOfRangeException e)
+        {
+            await MessageService.Show(new MessageOption()
+                {
+                    Content = "输入正确桌号",
+                    Color = Color.Danger
+                });
+        }
+
+
+
+    }
+
+    private async Task AddSocre(WxUser user, int score)
+    {
+        await wxService.UpdateUserScoreAsync(user, score);
+    }
+
+    private async Task GQrCode()
+    {
+        var did = desktopId - 1;
+        var didx = deskIndex - 1;
+
+        if (did < 0 || did >= DesktopCount || didx < 0 || didx >= 4)
+        {
+            return;
+        }
+        
+
+        using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+        using (QRCodeData qrCodeData = qrGenerator.CreateQrCode($"{{\"id\":{did},\"desk\":{didx} }}", QRCodeGenerator.ECCLevel.Q))
+        using (PngByteQRCode qrCode = new PngByteQRCode(qrCodeData))
+        {
+            byte[] qrCodeImage = qrCode.GetGraphic(20);
+            MemoryStream ms = new MemoryStream(qrCodeImage);
+            await downloadService.DownloadFromStreamAsync($"{desktopId}_{deskIndex}.png", ms);
+
+
+        }
+    }
 }
