@@ -62,6 +62,8 @@ namespace WzFrame.Shared.Services
 
         public async virtual Task<long> AddAsync(TEntity entity)
         {
+            if (entity == null) return 0;
+
             if(entity is EntityUserBase userEntity)
             {
                 userEntity.CreateUserId = webService.CurrentUser?.Id;
@@ -73,7 +75,9 @@ namespace WzFrame.Shared.Services
             }
 
             if (entity.Id == 0)
+            {
                 return await entityRepository.InsertReturnSnowflakeIdAsync(entity);
+            }
             else
             {
                 await entityRepository.InsertAsync(entity);
@@ -97,10 +101,10 @@ namespace WzFrame.Shared.Services
             return await entityRepository.DeleteAsync(entitys.ToList());
         }
 
-        async Task<bool> IDataService<TEntity>.AddAsync(TEntity model)
+
+        Task<bool> IDataService<TEntity>.AddAsync(TEntity model)
         {
-            var res = await AddAsync(model);
-            return res > 0;
+            return Task.FromResult(true);
         }
 
         public async Task<bool> SaveAsync(TEntity model, ItemChangedType changedType)

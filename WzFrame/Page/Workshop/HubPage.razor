@@ -1,4 +1,5 @@
 ﻿@page "/workshop/hub"
+@using WzFrame.Entity.Workshop
 @using WzFrame.Shared.Hubs
 
 
@@ -6,19 +7,35 @@
 @attribute [MenuPageOption(211, "Hub管理", Icon = "fas fa-computer", ParentId = 200, Permission = "admin")]
 @inject BlazorHub BlazorHub
 
-<Table TItem="HubUser" 
-    AutoGenerateColumns ShowToolbar ShowExtendButtons ShowSearchButton ShowSearch>
+<div style="height:400px;">
+    <Table TItem="LimitApp" AutoGenerateColumns ShowToolbar ShowExtendButtons>
+    </Table>
+</div>
 
+<div style="height:400px;">
+    <Table TItem="HubUser" 
+        AutoGenerateColumns ShowToolbar ShowExtendButtons ShowSearchButton ShowSearch>
+        <RowButtonTemplate>
+            <TableCellButton Text="启动" IsDisabled="@(!context.IsOnline)" OnClick="()=> Run(context.ConnectionId)" />
+            <TableCellButton Text="暂停" IsDisabled="@(!context.IsOnline)" OnClick="()=> Stop(context.ConnectionId)" />
+        </RowButtonTemplate>
+    </Table>
+</div>
 
-</Table>
 
 
 @code {
 
 
+
     public void Run(string id)
     {
+        BlazorHub.RunNetLimit(id);
+    }
 
+    public void Stop(string id)
+    {
+        BlazorHub.PauseNetLimit(id);
     }
 
 }

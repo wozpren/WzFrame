@@ -3,7 +3,6 @@
 @using WzFrame.Entity.System
 @using WzFrame.Entity.DTO
 @inherits LayoutComponentBase
-@implements IAsyncDisposable
 
 @inject BlazorService blazorService
 @inject UserService UserService
@@ -19,7 +18,7 @@
         <CascadingValue Value="User">
             <div class="main-layout">
                 <Layout ShowGotoTop="true" ShowCollapseBar="true" SideWidth="0"
-                IsPage="true" IsFullSide="@false" IsFixedHeader="@true"
+                IsPage IsFixedHeader IsFixedTabHeader IsFixedFooter
                 TabDefaultUrl="/" UseTabSet="@true" IsOnlyRenderActiveTab="@true"
                 Menus="@Menus">
                     <Header>
@@ -44,9 +43,6 @@
                     <Main>
                         @Body
                     </Main>
-                    <NotFound>
-                        <p>404 Not Found</p>
-                    </NotFound>
                     <NotAuthorized>
                         <RedirectToLogin />
                     </NotAuthorized>
@@ -71,6 +67,14 @@
     private UserVO? User;
 
     private HubConnection? clientConnection;
+
+    private bool collapsed { get; set; } = false;
+
+    private Task Collapse(bool collapsed)
+    {
+        this.collapsed = collapsed;
+        return Task.CompletedTask;
+    }
 
 
     protected override async Task OnInitializedAsync()
@@ -150,15 +154,6 @@
 
     [JSInvokable]
     public async Task OnBeforeUnload()
-    {
-        if (clientConnection != null)
-        {
-            await clientConnection.StopAsync();
-            await clientConnection.DisposeAsync();
-        }
-    }
-
-    public async ValueTask DisposeAsync()
     {
         if (clientConnection != null)
         {

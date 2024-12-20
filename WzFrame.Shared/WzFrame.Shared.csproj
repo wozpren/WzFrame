@@ -1,50 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="Config\**" />
     <Content Remove="Config\**" />
     <EmbeddedResource Remove="Config\**" />
     <None Remove="Config\**" />
   </ItemGroup>
-
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="AspNetCore.SassCompiler" Version="1.80.6" />
-    <PackageReference Include="Lazy.Captcha.Core" Version="2.0.9" />
-    <PackageReference Include="log4net" Version="3.0.3" />
-    <PackageReference Include="Mapster" Version="7.4.0" />
-    <PackageReference Include="Masuit.Tools.AspNetCore" Version="2024.4.2" />
-    <PackageReference Include="Masuit.Tools.Core" Version="2024.4.2" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.0" />
-    <PackageReference Include="Quartz" Version="3.13.1" />
-    <PackageReference Include="Quartz.AspNetCore" Version="3.13.1" />
-    <PackageReference Include="Senparc.Weixin.AspNet" Version="1.4.6" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.22.0" />
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.170" />
-    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
-    <PackageReference Include="Yitter.IdGenerator" Version="1.0.14" />
+    <PackageReference Include="AspNetCore.SassCompiler" />
+    <PackageReference Include="BootstrapBlazor" />
+    <PackageReference Include="Lazy.Captcha.Core" />
+    <PackageReference Include="log4net" />
+    <PackageReference Include="Mapster" />
+    <PackageReference Include="Masuit.Tools.AspNetCore" />
+    <PackageReference Include="Masuit.Tools.Core" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+    <PackageReference Include="Quartz" />
+    <PackageReference Include="Quartz.AspNetCore" />
+    <PackageReference Include="Senparc.Weixin.AspNet" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" />
+    <PackageReference Include="SqlSugarCore" />
+    <PackageReference Include="Yitter.IdGenerator" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\..\BootstrapBlazor\src\BootstrapBlazor\BootstrapBlazor.csproj" />
     <ProjectReference Include="..\WzFrame.Entity\WzFrame.Entity.csproj" />
     <ProjectReference Include="..\WzFrame.Identity.SqlSugar\WzFrame.Identity.SqlSugar.csproj" />
   </ItemGroup>
-
-
-
 </Project>

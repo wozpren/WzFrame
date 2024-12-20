@@ -155,7 +155,7 @@ public static class SqlSugarSetup
 
     }
 
-    public static void InitData(SqlSugarScope db, DatabaseConfig opt)
+    public static async void InitData(SqlSugarScope db, DatabaseConfig opt)
     {
         if (opt.InitMenu)
         {
@@ -178,12 +178,20 @@ public static class SqlSugarSetup
                 new ApplicationUser
                 {
                     Id = 539132739219525,
+                    OrgId = 0,
                     UserName = "wozpren",
                     NormalizedUserName = "WOZPREN",
                     Description = "超级管理员",
                     EmailConfirmed = true,
+                    TwoFactorEnabled = false,
+                    PhoneNumberConfirmed = false,
+                    LockoutEnabled = false,
+                    AccessFailedCount = 0,
                     PasswordHash = "AQAAAAIAAYagAAAAEFJMSDfHCioZPFHTyjvXgGZs/6Mg+DpW+jP0OVJNylEIbTrYKbCyB/iOB4U37J1f6Q==",
                     SecurityStamp = "VKLACJJM6SJACUYIVPLZXANHSXOUT5EK",
+                    Belong = "系统",
+                    DisplayName = "超级管理员",
+                    IsVip = true
                 }
             };
 
@@ -197,9 +205,9 @@ public static class SqlSugarSetup
             };
 
 
-            db.Storageable(roleList).ExecuteCommandAsync();
-            db.Storageable(userList).ExecuteCommandAsync();
-            db.Storageable(userRoles).ExecuteCommandAsync();
+            await db.Storageable(roleList).ExecuteCommandAsync();
+            await db.Storageable(userList).ExecuteCommandAsync();
+            await db.Storageable(userRoles).ExecuteCommandAsync();
         }
 
 

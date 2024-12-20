@@ -54,7 +54,7 @@
             using (var ms = new MemoryStream())
             {
                 var maxSize = 1 * 1024 * 1024;
-                await file.SaveToStreamAsync(ms, maxSize);
+                await file.File.OpenReadStream(maxSize).CopyToAsync(ms);
                 if(file.Code != 0)
                 {
                     await ToastService.Error("上传错误", file.Error);

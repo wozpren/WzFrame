@@ -8,23 +8,18 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using WzFrame.Entity;
 using WzFrame.Entity.System;
+using WzFrame.Entity.Workshop;
 using WzFrame.Shared.Extensions;
 using WzFrame.Shared.Services;
 
 namespace WzFrame.Shared.Hubs
 {
-    public struct LimitApp
-    {
-        public string Name;
-        public uint Limit;
-    }
-
     public sealed class BlazorHub : Hub
     {
         private readonly HubService hubService;
         private readonly EntityService<HubUser> userEnitty;
+        private readonly EntityService<LimitApp> limitEnitty;
 
 
         public BlazorHub(HubService hubService, IServiceProvider serviceProvider)
@@ -32,6 +27,7 @@ namespace WzFrame.Shared.Hubs
             this.hubService = hubService;
             var scope = serviceProvider.CreateScope();
             userEnitty = scope.ServiceProvider.GetService<EntityService<HubUser>>()!;
+            limitEnitty = scope.ServiceProvider.GetService<EntityService<LimitApp>>()!;
             scope.Dispose();
         }
 
@@ -75,10 +71,10 @@ namespace WzFrame.Shared.Hubs
         }
 
 
-        public List<LimitApp> GetLimitApps()
+        public async Task<List<LimitApp>> GetLimitApps()
         {
             // 这里是你的逻辑代码
-            return new List<LimitApp>();
+            return await limitEnitty.GetAll();
         }
 
         public Task SendNotification(string Id, OnlineNotification onlineNotification)

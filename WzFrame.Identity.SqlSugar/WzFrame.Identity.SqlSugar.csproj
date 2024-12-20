@@ -1,15 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Masuit.Tools.AspNetCore" Version="2024.4.2" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.7" />
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.170" />
+    <PackageReference Include="Masuit.Tools.AspNetCore"/>
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores"/>
+    <PackageReference Include="SqlSugarCore" />
   </ItemGroup>
-
 </Project>

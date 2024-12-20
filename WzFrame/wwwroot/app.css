@@ -184,3 +184,16 @@ body{
     grid-template-columns: max-content 1fr;
     gap: 12px;
 }
+
+.layout .layout-header .layout-header-bar {
+    --bb-layout-headerbar-background: transparent;
+    --bs-border-width: 0px;
+}
+
+.nav-link.active {
+    --bb-menu-item-hover-bg: #702cf8;
+}
+
+.nav-link:hover {
+    --bb-menu-item-hover-bg: #702cf8;
+}
